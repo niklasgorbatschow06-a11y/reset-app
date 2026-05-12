@@ -26,7 +26,12 @@ export default function Dashboard() {
 
   const checkPremium = async () => {
     const { data } = await supabase.auth.getUser()
-    const email = data.user?.email || 'test@reset.app'
+    if (!data.user) {
+  window.location.href = '/'
+  return
+}
+
+const email = data.user.email
 
     const params = new URLSearchParams(window.location.search)
 
