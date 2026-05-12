@@ -110,7 +110,7 @@ export default function Dashboard() {
 
   return (
 <main className="min-h-screen bg-black text-white px-6 py-8">
-  <div className="max-w-5xl mx-auto"></div>
+  <div className="max-w-5xl mx-auto">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
   <div>
     <p className="text-gray-500 mb-2">Willkommen zurück</p>
@@ -197,7 +197,7 @@ export default function Dashboard() {
           </div>
         )}
       </div>
-      </div>
+     </div>
     </main>
   )
 }
