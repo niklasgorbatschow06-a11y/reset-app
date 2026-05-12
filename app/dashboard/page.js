@@ -33,14 +33,10 @@ export default function Home() {
     return
   }
 
-  if (data.user) {
-    window.location.assign('/dashboard')
-  }
-}
+  alert('Login erfolgreich')
 
-    if (error) alert(error.message)
-    else window.location.href = '/dashboard'
-  }
+  window.location.href = '/dashboard'
+}
 
   return (
     <main className="min-h-screen bg-black text-white flex flex-col items-center justify-center px-6">
