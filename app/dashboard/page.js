@@ -35,7 +35,7 @@ export default function Home() {
 
   alert('Login erfolgreich')
 
-  window.location.href = '/dashboard'
+  window.location.replace('/dashboard')
 }
 
   return (
