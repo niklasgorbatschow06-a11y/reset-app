@@ -134,11 +134,11 @@ if (!user) {
         Du musst eingeloggt sein, um dein Dashboard zu sehen.
       </p>
       <a
-  href="/?login=true"
-        className="bg-white text-black px-8 py-4 rounded-2xl font-bold"
-      >
-        Zum Login
-      </a>
+  href="/"
+  className="bg-white text-black px-8 py-4 rounded-2xl font-bold"
+>
+  Zum Login
+</a>
     </main>
   )
 }
