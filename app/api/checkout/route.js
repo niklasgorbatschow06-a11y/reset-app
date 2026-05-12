@@ -30,11 +30,8 @@ export async function POST() {
         },
       ],
 
-      success_url:
-        'http://localhost:3000/dashboard?success=true',
-
-      cancel_url:
-        'http://localhost:3000/dashboard?canceled=true',
+      success_url: 'https://reset-app-pf4n.vercel.app/dashboard?success=true',
+cancel_url: 'https://reset-app-pf4n.vercel.app/dashboard?canceled=true',
     })
 
     return NextResponse.json({
