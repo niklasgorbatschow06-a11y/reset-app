@@ -16,6 +16,8 @@ export default function Dashboard() {
   ])
 
   const [premium, setPremium] = useState(false)
+  const [user, setUser] = useState(null)
+const [authLoading, setAuthLoading] = useState(true)
   const [coachInput, setCoachInput] = useState('')
   const [coachReply, setCoachReply] = useState('')
   const [coachLoading, setCoachLoading] = useState(false)
@@ -25,30 +27,39 @@ export default function Dashboard() {
   }, [])
 
   const checkPremium = async () => {
-    const { data } = await supabase.auth.getUser()
+  const { data } = await supabase.auth.getUser()
 
-    const email = data.user?.email || 'test@reset.app'
-
-    const params = new URLSearchParams(window.location.search)
-
-    if (params.get('success') === 'true') {
-      await supabase.from('users').upsert({
-        email,
-        is_premium: true,
-      })
-
-      setPremium(true)
-      return
-    }
-
-    const { data: userData } = await supabase
-      .from('users')
-      .select('*')
-      .eq('email', email)
-      .maybeSingle()
-
-    setPremium(Boolean(userData?.is_premium))
+  if (!data.user) {
+    setUser(null)
+    setAuthLoading(false)
+    return
   }
+
+  setUser(data.user)
+
+  const email = data.user.email
+  const params = new URLSearchParams(window.location.search)
+
+  if (params.get('success') === 'true') {
+    await supabase.from('users').upsert({
+      email,
+      is_premium: true,
+    })
+
+    setPremium(true)
+    setAuthLoading(false)
+    return
+  }
+
+  const { data: userData } = await supabase
+    .from('users')
+    .select('*')
+    .eq('email', email)
+    .maybeSingle()
+
+  setPremium(Boolean(userData?.is_premium))
+  setAuthLoading(false)
+}
 
   const toggleTask = (id) => {
     setTasks(
@@ -107,7 +118,30 @@ export default function Dashboard() {
 
   const completed = tasks.filter((task) => task.completed).length
   const progress = Math.round((completed / tasks.length) * 100)
+if (authLoading) {
+  return (
+    <main className="min-h-screen bg-black text-white flex items-center justify-center">
+      <p className="text-gray-400">Lade Dashboard...</p>
+    </main>
+  )
+}
 
+if (!user) {
+  return (
+    <main className="min-h-screen bg-black text-white flex flex-col items-center justify-center px-6 text-center">
+      <h1 className="text-4xl font-bold mb-4">Bitte einloggen</h1>
+      <p className="text-gray-400 mb-6">
+        Du musst eingeloggt sein, um dein Dashboard zu sehen.
+      </p>
+      <a
+        href="/"
+        className="bg-white text-black px-8 py-4 rounded-2xl font-bold"
+      >
+        Zum Login
+      </a>
+    </main>
+  )
+}
   return (
 <main className="min-h-screen bg-black text-white px-6 py-8">
   <div className="max-w-5xl mx-auto">
