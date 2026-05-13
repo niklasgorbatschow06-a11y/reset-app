@@ -179,92 +179,55 @@ if (!user) {
         </div>
       )}
 
-      <div className="bg-gray-900 rounded-2xl p-6 mb-6">
-        <p className="text-gray-400 mb-2">Fortschritt</p>
+      <div className="bg-gray-900 rounded-3xl border border-gray-800 p-6">
+  <div className="flex items-center justify-between mb-4">
+    <h2 className="text-2xl font-bold">KI Coach</h2>
 
-        <div className="w-full bg-gray-800 rounded-full h-4 mb-4">
-          <div
-            className="bg-white h-4 rounded-full"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-
-        <p>
-          {completed} von {tasks.length} erledigt
-        </p>
-      </div>
-
-      {!premium && (
-  <div className="bg-gradient-to-br from-gray-900 to-black border border-gray-800 rounded-3xl p-6 mb-8">
-    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-      <div>
-        <p className="text-yellow-400 font-bold mb-2">RESET Premium</p>
-        <h2 className="text-3xl font-bold mb-3">
-          Schalte deinen KI-Coach frei
-        </h2>
-        <p className="text-gray-400 max-w-xl">
-          Erhalte persönliche Motivation, klare nächste Schritte und direkte Antworten, wenn du festhängst.
-        </p>
-      </div>
-
-      <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5 min-w-64">
-        <p className="text-gray-400 mb-1">Nur</p>
-        <p className="text-4xl font-bold mb-4">9,99 €</p>
-        <p className="text-gray-500 mb-4">pro Monat</p>
-
-        <button
-          onClick={startCheckout}
-          className="w-full bg-white text-black py-4 rounded-2xl font-bold"
-        >
-          Premium starten
-        </button>
-      </div>
-    </div>
+    {!premium && (
+      <span className="text-sm bg-yellow-500 text-black px-3 py-1 rounded-full font-bold">
+        Premium 🔒
+      </span>
+    )}
   </div>
-)}
 
-      <div className="space-y-4 mb-8">
-        {tasks.map((task) => (
-          <button
-            key={task.id}
-            onClick={() => toggleTask(task.id)}
-            className="w-full bg-gray-900 p-4 rounded-xl flex justify-between"
-          >
-            <span
-              className={task.completed ? 'line-through text-gray-500' : ''}
-            >
-              {task.title}
-            </span>
+  {!premium ? (
+    <div className="text-center py-8">
+      <p className="text-gray-400 mb-6">
+        Der KI-Coach ist nur für Premium-Nutzer verfügbar.
+      </p>
 
-            <span>{task.completed ? '✅' : '⬜'}</span>
-          </button>
-        ))}
-      </div>
+      <button
+        onClick={startCheckout}
+        className="bg-white text-black px-6 py-3 rounded-2xl font-bold"
+      >
+        Premium freischalten
+      </button>
+    </div>
+  ) : (
+    <>
+      <textarea
+        value={coachInput}
+        onChange={(e) => setCoachInput(e.target.value)}
+        placeholder="Was hält dich heute zurück?"
+        className="w-full bg-black border border-gray-700 rounded-xl p-4 mb-4 min-h-28"
+      />
 
-      <div className="bg-gray-900 rounded-2xl p-6">
-        <h2 className="text-2xl font-bold mb-4">KI Coach</h2>
+      <button
+        onClick={askCoach}
+        disabled={coachLoading}
+        className="w-full bg-white text-black py-4 rounded-2xl font-bold disabled:opacity-50"
+      >
+        {coachLoading ? 'Coach denkt...' : 'Coach fragen'}
+      </button>
 
-        <textarea
-          value={coachInput}
-          onChange={(e) => setCoachInput(e.target.value)}
-          placeholder="Was hält dich heute zurück?"
-          className="w-full bg-black border border-gray-700 rounded-xl p-4 mb-4 min-h-28"
-        />
-
-        <button
-          onClick={askCoach}
-          disabled={coachLoading}
-          className="w-full bg-white text-black py-4 rounded-2xl font-bold disabled:opacity-50"
-        >
-          {coachLoading ? 'Coach denkt...' : 'Coach fragen'}
-        </button>
-
-        {coachReply && (
-          <div className="mt-4 bg-black border border-gray-800 rounded-xl p-4 text-gray-300 whitespace-pre-wrap">
-            {coachReply}
-          </div>
-        )}
-      </div>
+      {coachReply && (
+        <div className="mt-4 bg-black border border-gray-800 rounded-xl p-4 text-gray-300 whitespace-pre-wrap">
+          {coachReply}
+        </div>
+      )}
+    </>
+  )}
+</div>
      </div>
     </main>
   )
