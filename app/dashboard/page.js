@@ -8,13 +8,14 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 )
 
+const defaultTasks = [
+  'Trainiere deinen Körper',
+  'Arbeite an deinem Ziel',
+  'Lerne etwas Neues',
+]
+
 export default function Dashboard() {
-  const [tasks, setTasks] = useState([
-    { id: 1, title: '1h Sport', completed: false },
-    { id: 2, title: 'Fokusarbeit', completed: false },
-    { id: 3, title: 'Lesen', completed: false },
-    { id: 4, title: 'Meditation', completed: false },
-  ])
+  const [tasks, setTasks] = useState([])
   const [premium, setPremium] = useState(false)
   const [user, setUser] = useState(null)
   const [authLoading, setAuthLoading] = useState(true)
@@ -26,11 +27,13 @@ export default function Dashboard() {
   const [coachReply, setCoachReply] = useState('')
   const [coachLoading, setCoachLoading] = useState(false)
 
+  const today = new Date().toISOString().split('T')[0]
+
   useEffect(() => {
-    checkPremium()
+    init()
   }, [])
 
-  const checkPremium = async () => {
+  const init = async () => {
     const { data } = await supabase.auth.getUser()
 
     if (!data.user) {
@@ -41,7 +44,14 @@ export default function Dashboard() {
 
     setUser(data.user)
 
-    const email = data.user.email
+    await checkPremium(data.user.email)
+    await createTasksIfNeeded(data.user.email)
+    await loadTasks(data.user.email)
+
+    setAuthLoading(false)
+  }
+
+  const checkPremium = async (email) => {
     const params = new URLSearchParams(window.location.search)
 
     if (params.get('success') === 'true') {
@@ -51,7 +61,6 @@ export default function Dashboard() {
       })
 
       setPremium(true)
-      setAuthLoading(false)
       return
     }
 
@@ -62,15 +71,55 @@ export default function Dashboard() {
       .maybeSingle()
 
     setPremium(Boolean(userData?.is_premium))
-    setAuthLoading(false)
   }
 
-  const toggleTask = (id) => {
-    setTasks(
-      tasks.map((task) =>
-        task.id === id ? { ...task, completed: !task.completed } : task
-      )
-    )
+  const createTasksIfNeeded = async (email) => {
+    const { data } = await supabase
+      .from('daily_tasks')
+      .select('*')
+      .eq('email', email)
+      .eq('date', today)
+
+    if (data && data.length > 0) return
+
+    const tasksToCreate = defaultTasks.map((title) => ({
+      email,
+      title,
+      completed: false,
+      date: today,
+    }))
+
+    await supabase.from('daily_tasks').insert(tasksToCreate)
+  }
+
+  const loadTasks = async (email) => {
+    const { data, error } = await supabase
+      .from('daily_tasks')
+      .select('*')
+      .eq('email', email)
+      .eq('date', today)
+      .order('id', { ascending: true })
+
+    if (error) {
+      alert(error.message)
+      return
+    }
+
+    setTasks(data || [])
+  }
+
+  const toggleTask = async (task) => {
+    const { error } = await supabase
+      .from('daily_tasks')
+      .update({ completed: !task.completed })
+      .eq('id', task.id)
+
+    if (error) {
+      alert(error.message)
+      return
+    }
+
+    await loadTasks(user.email)
     setMessage('')
   }
 
@@ -83,7 +132,6 @@ export default function Dashboard() {
     }
 
     setStreak(streak + 1)
-    setTasks(tasks.map((task) => ({ ...task, completed: false })))
     setMessage('Tag abgeschlossen 🔥 Streak erhöht.')
   }
 
@@ -140,7 +188,8 @@ export default function Dashboard() {
   }
 
   const completed = tasks.filter((task) => task.completed).length
-  const progress = Math.round((completed / tasks.length) * 100)
+  const progress =
+    tasks.length === 0 ? 0 : Math.round((completed / tasks.length) * 100)
 
   if (authLoading) {
     return (
@@ -249,7 +298,7 @@ export default function Dashboard() {
           {tasks.map((task) => (
             <button
               key={task.id}
-              onClick={() => toggleTask(task.id)}
+              onClick={() => toggleTask(task)}
               className="w-full bg-gray-900 p-4 rounded-xl flex justify-between"
             >
               <span
