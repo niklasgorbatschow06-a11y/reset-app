@@ -17,7 +17,11 @@ export default function Dashboard() {
 
   const [premium, setPremium] = useState(false)
   const [user, setUser] = useState(null)
-const [authLoading, setAuthLoading] = useState(true)
+  const [authLoading, setAuthLoading] = useState(true)
+
+  const [streak, setStreak] = useState(0)
+  const [message, setMessage] = useState('')
+
   const [coachInput, setCoachInput] = useState('')
   const [coachReply, setCoachReply] = useState('')
   const [coachLoading, setCoachLoading] = useState(false)
@@ -27,39 +31,39 @@ const [authLoading, setAuthLoading] = useState(true)
   }, [])
 
   const checkPremium = async () => {
-  const { data } = await supabase.auth.getUser()
+    const { data } = await supabase.auth.getUser()
 
-  if (!data.user) {
-    setUser(null)
+    if (!data.user) {
+      setUser(null)
+      setAuthLoading(false)
+      return
+    }
+
+    setUser(data.user)
+
+    const email = data.user.email
+    const params = new URLSearchParams(window.location.search)
+
+    if (params.get('success') === 'true') {
+      await supabase.from('users').upsert({
+        email,
+        is_premium: true,
+      })
+
+      setPremium(true)
+      setAuthLoading(false)
+      return
+    }
+
+    const { data: userData } = await supabase
+      .from('users')
+      .select('*')
+      .eq('email', email)
+      .maybeSingle()
+
+    setPremium(Boolean(userData?.is_premium))
     setAuthLoading(false)
-    return
   }
-
-  setUser(data.user)
-
-  const email = data.user.email
-  const params = new URLSearchParams(window.location.search)
-
-  if (params.get('success') === 'true') {
-    await supabase.from('users').upsert({
-      email,
-      is_premium: true,
-    })
-
-    setPremium(true)
-    setAuthLoading(false)
-    return
-  }
-
-  const { data: userData } = await supabase
-    .from('users')
-    .select('*')
-    .eq('email', email)
-    .maybeSingle()
-
-  setPremium(Boolean(userData?.is_premium))
-  setAuthLoading(false)
-}
 
   const toggleTask = (id) => {
     setTasks(
@@ -67,6 +71,20 @@ const [authLoading, setAuthLoading] = useState(true)
         task.id === id ? { ...task, completed: !task.completed } : task
       )
     )
+    setMessage('')
+  }
+
+  const completeDay = () => {
+    const allDone = tasks.every((task) => task.completed)
+
+    if (!allDone) {
+      setMessage('Erledige zuerst alle Aufgaben.')
+      return
+    }
+
+    setStreak(streak + 1)
+    setTasks(tasks.map((task) => ({ ...task, completed: false })))
+    setMessage('Tag abgeschlossen 🔥 Streak erhöht.')
   }
 
   const startCheckout = async () => {
@@ -116,119 +134,202 @@ const [authLoading, setAuthLoading] = useState(true)
     setCoachLoading(false)
   }
 
+  const logout = async () => {
+    await supabase.auth.signOut()
+    window.location.href = '/'
+  }
+
   const completed = tasks.filter((task) => task.completed).length
   const progress = Math.round((completed / tasks.length) * 100)
-if (authLoading) {
-  return (
-    <main className="min-h-screen bg-black text-white flex items-center justify-center">
-      <p className="text-gray-400">Lade Dashboard...</p>
-    </main>
-  )
-}
 
-if (!user) {
-  return (
-    <main className="min-h-screen bg-black text-white flex flex-col items-center justify-center px-6 text-center">
-      <h1 className="text-4xl font-bold mb-4">Bitte einloggen</h1>
-      <p className="text-gray-400 mb-6">
-        Du musst eingeloggt sein, um dein Dashboard zu sehen.
-      </p>
-      <a
-  href="/"
-  className="bg-white text-black px-8 py-4 rounded-2xl font-bold"
->
-  Zum Login
-</a>
-    </main>
-  )
-}
-  return (
-<main className="min-h-screen bg-black text-white px-6 py-8">
-  <div className="max-w-5xl mx-auto">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
-  <div>
-    <p className="text-gray-500 mb-2">Willkommen zurück</p>
-    <h1 className="text-4xl md:text-5xl font-bold">RESET Dashboard</h1>
-    <p className="text-gray-400 mt-2">
-      Gewinne den heutigen Tag mit klaren Aufgaben.
-    </p>
-  </div>
+  if (authLoading) {
+    return (
+      <main className="min-h-screen bg-black text-white flex items-center justify-center">
+        <p className="text-gray-400">Lade Dashboard...</p>
+      </main>
+    )
+  }
 
-  <div className="flex gap-3">
-  <div className="bg-gray-900 border border-gray-800 rounded-2xl px-5 py-4">
-    <p className="text-gray-500 text-sm">Status</p>
-    <p className="font-bold">
-      {premium ? 'Premium aktiv 🔥' : 'Free Plan'}
-    </p>
-  </div>
+  if (!user) {
+    return (
+      <main className="min-h-screen bg-black text-white flex flex-col items-center justify-center px-6 text-center">
+        <h1 className="text-4xl font-bold mb-4">Bitte einloggen</h1>
+        <p className="text-gray-400 mb-6">
+          Du musst eingeloggt sein, um dein Dashboard zu sehen.
+        </p>
+        <a
+          href="/"
+          className="bg-white text-black px-8 py-4 rounded-2xl font-bold"
+        >
+          Zum Login
+        </a>
+      </main>
+    )
+  }
 
-  <button
-    onClick={async () => {
-      await supabase.auth.signOut()
-      window.location.href = '/'
-    }}
-    className="bg-gray-900 border border-gray-800 rounded-2xl px-5 py-4 font-bold text-gray-300 hover:text-white"
-  >
-    Logout
-  </button>
-</div>
-</div>
-      {premium && (
-        <div className="bg-yellow-500 text-black px-4 py-2 rounded-xl mb-6 font-bold">
-          PREMIUM AKTIV 🔥
+  return (
+    <main className="min-h-screen bg-black text-white px-6 py-8">
+      <div className="max-w-5xl mx-auto">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+          <div>
+            <p className="text-gray-500 mb-2">Willkommen zurück</p>
+            <h1 className="text-4xl md:text-5xl font-bold">RESET Dashboard</h1>
+            <p className="text-gray-400 mt-2">
+              Gewinne den heutigen Tag mit klaren Aufgaben.
+            </p>
+          </div>
+
+          <div className="flex gap-3">
+            <div className="bg-gray-900 border border-gray-800 rounded-2xl px-5 py-4">
+              <p className="text-gray-500 text-sm">Status</p>
+              <p className="font-bold">
+                {premium ? 'Premium aktiv 🔥' : 'Free Plan'}
+              </p>
+            </div>
+
+            <button
+              onClick={logout}
+              className="bg-gray-900 border border-gray-800 rounded-2xl px-5 py-4 font-bold text-gray-300 hover:text-white"
+            >
+              Logout
+            </button>
+          </div>
         </div>
-      )}
 
-      <div className="bg-gray-900 rounded-3xl border border-gray-800 p-6">
-  <div className="flex items-center justify-between mb-4">
-    <h2 className="text-2xl font-bold">KI Coach</h2>
+        {premium && (
+          <div className="bg-yellow-500 text-black px-4 py-2 rounded-xl mb-6 font-bold">
+            PREMIUM AKTIV 🔥
+          </div>
+        )}
 
-    {!premium && (
-      <span className="text-sm bg-yellow-500 text-black px-3 py-1 rounded-full font-bold">
-        Premium 🔒
-      </span>
-    )}
-  </div>
-
-  {!premium ? (
-    <div className="text-center py-8">
-      <p className="text-gray-400 mb-6">
-        Der KI-Coach ist nur für Premium-Nutzer verfügbar.
-      </p>
-
-      <button
-        onClick={startCheckout}
-        className="bg-white text-black px-6 py-3 rounded-2xl font-bold"
-      >
-        Premium freischalten
-      </button>
-    </div>
-  ) : (
-    <>
-      <textarea
-        value={coachInput}
-        onChange={(e) => setCoachInput(e.target.value)}
-        placeholder="Was hält dich heute zurück?"
-        className="w-full bg-black border border-gray-700 rounded-xl p-4 mb-4 min-h-28"
-      />
-
-      <button
-        onClick={askCoach}
-        disabled={coachLoading}
-        className="w-full bg-white text-black py-4 rounded-2xl font-bold disabled:opacity-50"
-      >
-        {coachLoading ? 'Coach denkt...' : 'Coach fragen'}
-      </button>
-
-      {coachReply && (
-        <div className="mt-4 bg-black border border-gray-800 rounded-xl p-4 text-gray-300 whitespace-pre-wrap">
-          {coachReply}
+        <div className="bg-gray-900 rounded-2xl p-6 mb-6">
+          <p className="text-gray-400 mb-2">Dein Streak</p>
+          <h2 className="text-5xl font-bold">🔥 {streak} Tage</h2>
         </div>
-      )}
-    </>
-  )}
-</div>
-     </div>
+
+        <div className="bg-gray-900 rounded-2xl p-6 mb-6">
+          <p className="text-gray-400 mb-2">Fortschritt</p>
+
+          <div className="w-full bg-gray-800 rounded-full h-4 mb-4">
+            <div
+              className="bg-white h-4 rounded-full"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+
+          <p>
+            {completed} von {tasks.length} erledigt
+          </p>
+        </div>
+
+        {!premium && (
+          <div className="bg-gradient-to-br from-gray-900 to-black border border-gray-800 rounded-3xl p-6 mb-8">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+              <div>
+                <p className="text-yellow-400 font-bold mb-2">RESET Premium</p>
+                <h2 className="text-3xl font-bold mb-3">
+                  Schalte deinen KI-Coach frei
+                </h2>
+                <p className="text-gray-400 max-w-xl">
+                  Erhalte persönliche Motivation, klare nächste Schritte und direkte Antworten, wenn du festhängst.
+                </p>
+              </div>
+
+              <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5 min-w-64">
+                <p className="text-gray-400 mb-1">Nur</p>
+                <p className="text-4xl font-bold mb-4">9,99 €</p>
+                <p className="text-gray-500 mb-4">pro Monat</p>
+
+                <button
+                  onClick={startCheckout}
+                  className="w-full bg-white text-black py-4 rounded-2xl font-bold"
+                >
+                  Premium starten
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="space-y-4 mb-6">
+          {tasks.map((task) => (
+            <button
+              key={task.id}
+              onClick={() => toggleTask(task.id)}
+              className="w-full bg-gray-900 p-4 rounded-xl flex justify-between"
+            >
+              <span
+                className={task.completed ? 'line-through text-gray-500' : ''}
+              >
+                {task.title}
+              </span>
+
+              <span>{task.completed ? '✅' : '⬜'}</span>
+            </button>
+          ))}
+        </div>
+
+        <button
+          onClick={completeDay}
+          className="w-full bg-white text-black py-4 rounded-2xl font-bold mb-4"
+        >
+          Tag abschließen
+        </button>
+
+        {message && (
+          <p className="text-center text-gray-400 mb-8">{message}</p>
+        )}
+
+        <div className="bg-gray-900 rounded-3xl border border-gray-800 p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-2xl font-bold">KI Coach</h2>
+
+            {!premium && (
+              <span className="text-sm bg-yellow-500 text-black px-3 py-1 rounded-full font-bold">
+                Premium 🔒
+              </span>
+            )}
+          </div>
+
+          {!premium ? (
+            <div className="text-center py-8">
+              <p className="text-gray-400 mb-6">
+                Der KI-Coach ist nur für Premium-Nutzer verfügbar.
+              </p>
+
+              <button
+                onClick={startCheckout}
+                className="bg-white text-black px-6 py-3 rounded-2xl font-bold"
+              >
+                Premium freischalten
+              </button>
+            </div>
+          ) : (
+            <>
+              <textarea
+                value={coachInput}
+                onChange={(e) => setCoachInput(e.target.value)}
+                placeholder="Was hält dich heute zurück?"
+                className="w-full bg-black border border-gray-700 rounded-xl p-4 mb-4 min-h-28"
+              />
+
+              <button
+                onClick={askCoach}
+                disabled={coachLoading}
+                className="w-full bg-white text-black py-4 rounded-2xl font-bold disabled:opacity-50"
+              >
+                {coachLoading ? 'Coach denkt...' : 'Coach fragen'}
+              </button>
+
+              {coachReply && (
+                <div className="mt-4 bg-black border border-gray-800 rounded-xl p-4 text-gray-300 whitespace-pre-wrap">
+                  {coachReply}
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      </div>
     </main>
   )
 }
