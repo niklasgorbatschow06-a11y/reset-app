@@ -150,7 +150,7 @@ export default function Dashboard() {
     setMessage('')
   }
 
-  const completeDay = async () => {
+ const completeDay = async () => {
   const allDone = tasks.every((task) => task.completed)
 
   if (!allDone) {
@@ -169,7 +169,15 @@ export default function Dashboard() {
     return
   }
 
-  const newStreak = (data?.streak || 0) + 1
+  const yesterdayDate = new Date()
+  yesterdayDate.setDate(yesterdayDate.getDate() - 1)
+  const yesterday = yesterdayDate.toISOString().split('T')[0]
+
+  let newStreak = 1
+
+  if (data?.last_completed === yesterday) {
+    newStreak = (data?.streak || 0) + 1
+  }
 
   await supabase.from('streaks').upsert({
     email: user.email,
@@ -177,17 +185,10 @@ export default function Dashboard() {
     last_completed: today,
   })
 
-  await supabase
-  .from('daily_tasks')
-  .update({ completed: false })
-  .eq('email', user.email)
-  .eq('date', today)
-
-await loadTasks(user.email)
-
-setStreak(newStreak)
-setMessage('Tag abgeschlossen 🔥 Streak gespeichert.')
+  setStreak(newStreak)
+  setMessage('Tag abgeschlossen 🔥 Streak gespeichert.')
 }
+
   
 
   const startCheckout = async () => {
