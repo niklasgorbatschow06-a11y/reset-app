@@ -9,9 +9,10 @@ const supabase = createClient(
 )
 
 const defaultTasks = [
-  'Trainiere deinen Körper',
-  'Arbeite an deinem Ziel',
-  'Lerne etwas Neues',
+  'Fokusarbeit',
+  'Sport',
+  'Lesen',
+  'Meditation',
 ]
 
 export default function Dashboard() {
