@@ -47,6 +47,32 @@ export default function Dashboard() {
     await checkPremium(data.user.email)
     await createTasksIfNeeded(data.user.email)
     await loadTasks(data.user.email)
+    const loadStreak = async (email) => {
+  const { data, error } = await supabase
+    .from('streaks')
+    .select('*')
+    .eq('email', email)
+    .maybeSingle()
+
+  if (error) {
+    alert(error.message)
+    return
+  }
+
+  if (!data) {
+    await supabase.from('streaks').insert({
+      email,
+      streak: 0,
+      last_completed: null,
+    })
+
+    setStreak(0)
+    return
+  }
+
+  setStreak(data.streak || 0)
+}
+    await loadStreak(data.user.email)
 
     setAuthLoading(false)
   }
@@ -123,17 +149,37 @@ export default function Dashboard() {
     setMessage('')
   }
 
-  const completeDay = () => {
-    const allDone = tasks.every((task) => task.completed)
+  const completeDay = async () => {
+  const allDone = tasks.every((task) => task.completed)
 
-    if (!allDone) {
-      setMessage('Erledige zuerst alle Aufgaben.')
-      return
-    }
-
-    setStreak(streak + 1)
-    setMessage('Tag abgeschlossen 🔥 Streak erhöht.')
+  if (!allDone) {
+    setMessage('Erledige zuerst alle Aufgaben.')
+    return
   }
+
+  const { data } = await supabase
+    .from('streaks')
+    .select('*')
+    .eq('email', user.email)
+    .maybeSingle()
+
+  if (data?.last_completed === today) {
+    setMessage('Du hast deinen Streak heute schon gesichert.')
+    return
+  }
+
+  const newStreak = (data?.streak || 0) + 1
+
+  await supabase.from('streaks').upsert({
+    email: user.email,
+    streak: newStreak,
+    last_completed: today,
+  })
+
+  setStreak(newStreak)
+  setMessage('Tag abgeschlossen 🔥 Streak gespeichert.')
+}
+  
 
   const startCheckout = async () => {
     const response = await fetch('/api/checkout', {
