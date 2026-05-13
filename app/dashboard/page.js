@@ -194,12 +194,34 @@ if (!user) {
         </p>
       </div>
 
-      <button
-        onClick={startCheckout}
-        className="w-full bg-white text-black py-4 rounded-2xl font-bold mb-8"
-      >
-        Premium starten – 9,99 €/Monat
-      </button>
+      {!premium && (
+  <div className="bg-gradient-to-br from-gray-900 to-black border border-gray-800 rounded-3xl p-6 mb-8">
+    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+      <div>
+        <p className="text-yellow-400 font-bold mb-2">RESET Premium</p>
+        <h2 className="text-3xl font-bold mb-3">
+          Schalte deinen KI-Coach frei
+        </h2>
+        <p className="text-gray-400 max-w-xl">
+          Erhalte persönliche Motivation, klare nächste Schritte und direkte Antworten, wenn du festhängst.
+        </p>
+      </div>
+
+      <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5 min-w-64">
+        <p className="text-gray-400 mb-1">Nur</p>
+        <p className="text-4xl font-bold mb-4">9,99 €</p>
+        <p className="text-gray-500 mb-4">pro Monat</p>
+
+        <button
+          onClick={startCheckout}
+          className="w-full bg-white text-black py-4 rounded-2xl font-bold"
+        >
+          Premium starten
+        </button>
+      </div>
+    </div>
+  </div>
+)}
 
       <div className="space-y-4 mb-8">
         {tasks.map((task) => (
