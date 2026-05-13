@@ -15,7 +15,6 @@ export default function Dashboard() {
     { id: 3, title: 'Lesen', completed: false },
     { id: 4, title: 'Meditation', completed: false },
   ])
-
   const [premium, setPremium] = useState(false)
   const [user, setUser] = useState(null)
   const [authLoading, setAuthLoading] = useState(true)
