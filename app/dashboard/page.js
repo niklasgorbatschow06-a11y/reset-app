@@ -10,9 +10,10 @@ const supabase = createClient(
 
 export default function Dashboard() {
   const [tasks, setTasks] = useState([
-    { id: 1, title: '10 Minuten Bewegung', completed: false },
-    { id: 2, title: '30 Minuten Fokusarbeit', completed: false },
-    { id: 3, title: '5 Seiten lesen', completed: false },
+    { id: 1, title: '1h Sport', completed: false },
+    { id: 2, title: 'Fokusarbeit', completed: false },
+    { id: 3, title: 'Lesen', completed: false },
+    { id: 4, title: 'Meditation', completed: false },
   ])
 
   const [premium, setPremium] = useState(false)
@@ -195,12 +196,6 @@ export default function Dashboard() {
             </button>
           </div>
         </div>
-
-        {premium && (
-          <div className="bg-yellow-500 text-black px-4 py-2 rounded-xl mb-6 font-bold">
-            PREMIUM AKTIV 🔥
-          </div>
-        )}
 
         <div className="bg-gray-900 rounded-2xl p-6 mb-6">
           <p className="text-gray-400 mb-2">Dein Streak</p>
