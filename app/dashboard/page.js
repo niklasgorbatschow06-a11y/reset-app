@@ -9,21 +9,21 @@ const supabase = createClient(
 )
 
 const defaultTasks = [
-  'Fokusarbeit',
-  'Sport',
-  'Lesen',
-  'Meditation',
+  'Trainiere deinen Körper',
+  'Arbeite an deinem Ziel',
+  'Lerne etwas Neues',
 ]
 
 export default function Dashboard() {
   const [tasks, setTasks] = useState([])
-  const [newTask, setNewTask] = useState('')
   const [premium, setPremium] = useState(false)
   const [user, setUser] = useState(null)
   const [authLoading, setAuthLoading] = useState(true)
 
   const [streak, setStreak] = useState(0)
   const [message, setMessage] = useState('')
+
+  const [newTask, setNewTask] = useState('')
 
   const [coachInput, setCoachInput] = useState('')
   const [coachReply, setCoachReply] = useState('')
@@ -41,24 +41,6 @@ export default function Dashboard() {
     if (!data.user) {
       setUser(null)
       setAuthLoading(false)
-      const addTask = async () => {
-  if (!newTask.trim()) return
-
-  const { error } = await supabase.from('daily_tasks').insert({
-    email: user.email,
-    title: newTask,
-    completed: false,
-    date: today,
-  })
-
-  if (error) {
-    alert(error.message)
-    return
-  }
-
-  setNewTask('')
-  await loadTasks(user.email)
-}
       return
     }
 
@@ -67,31 +49,6 @@ export default function Dashboard() {
     await checkPremium(data.user.email)
     await createTasksIfNeeded(data.user.email)
     await loadTasks(data.user.email)
-    const loadStreak = async (email) => {
-  const { data, error } = await supabase
-    .from('streaks')
-    .select('*')
-    .eq('email', email)
-    .maybeSingle()
-
-  if (error) {
-    alert(error.message)
-    return
-  }
-
-  if (!data) {
-    await supabase.from('streaks').insert({
-      email,
-      streak: 0,
-      last_completed: null,
-    })
-
-    setStreak(0)
-    return
-  }
-
-  setStreak(data.streak || 0)
-}
     await loadStreak(data.user.email)
 
     setAuthLoading(false)
@@ -154,6 +111,32 @@ export default function Dashboard() {
     setTasks(data || [])
   }
 
+  const loadStreak = async (email) => {
+    const { data, error } = await supabase
+      .from('streaks')
+      .select('*')
+      .eq('email', email)
+      .maybeSingle()
+
+    if (error) {
+      alert(error.message)
+      return
+    }
+
+    if (!data) {
+      await supabase.from('streaks').insert({
+        email,
+        streak: 0,
+        last_completed: null,
+      })
+
+      setStreak(0)
+      return
+    }
+
+    setStreak(data.streak || 0)
+  }
+
   const toggleTask = async (task) => {
     const { error } = await supabase
       .from('daily_tasks')
@@ -169,46 +152,63 @@ export default function Dashboard() {
     setMessage('')
   }
 
- const completeDay = async () => {
-  const allDone = tasks.every((task) => task.completed)
+  const addTask = async () => {
+    if (!newTask.trim()) return
 
-  if (!allDone) {
-    setMessage('Erledige zuerst alle Aufgaben.')
-    return
+    const { error } = await supabase.from('daily_tasks').insert({
+      email: user.email,
+      title: newTask,
+      completed: false,
+      date: today,
+    })
+
+    if (error) {
+      alert(error.message)
+      return
+    }
+
+    setNewTask('')
+    await loadTasks(user.email)
   }
 
-  const { data } = await supabase
-    .from('streaks')
-    .select('*')
-    .eq('email', user.email)
-    .maybeSingle()
+  const completeDay = async () => {
+    const allDone = tasks.every((task) => task.completed)
 
-  if (data?.last_completed === today) {
-    setMessage('Du hast deinen Streak heute schon gesichert.')
-    return
+    if (!allDone) {
+      setMessage('Erledige zuerst alle Aufgaben.')
+      return
+    }
+
+    const { data } = await supabase
+      .from('streaks')
+      .select('*')
+      .eq('email', user.email)
+      .maybeSingle()
+
+    if (data?.last_completed === today) {
+      setMessage('Du hast deinen Streak heute schon gesichert.')
+      return
+    }
+
+    const yesterdayDate = new Date()
+    yesterdayDate.setDate(yesterdayDate.getDate() - 1)
+    const yesterday = yesterdayDate.toISOString().split('T')[0]
+
+    let newStreak = 1
+
+    if (data?.last_completed === yesterday) {
+      newStreak = (data?.streak || 0) + 1
+    }
+
+    await supabase.from('streaks').upsert({
+      email: user.email,
+      streak: newStreak,
+      last_completed: today,
+    })
+
+    setStreak(newStreak)
+    setMessage('Tag abgeschlossen 🔥 Streak gespeichert.')
   }
-
-  const yesterdayDate = new Date()
-  yesterdayDate.setDate(yesterdayDate.getDate() - 1)
-  const yesterday = yesterdayDate.toISOString().split('T')[0]
-
-  let newStreak = 1
-
-  if (data?.last_completed === yesterday) {
-    newStreak = (data?.streak || 0) + 1
-  }
-
-  await supabase.from('streaks').upsert({
-    email: user.email,
-    streak: newStreak,
-    last_completed: today,
-  })
-
-  setStreak(newStreak)
-  setMessage('Tag abgeschlossen 🔥 Streak gespeichert.')
-}
-
-  
 
   const startCheckout = async () => {
     const response = await fetch('/api/checkout', {
@@ -368,25 +368,27 @@ export default function Dashboard() {
             </div>
           </div>
         )}
-<div className="bg-gray-900 rounded-2xl p-6 mb-6">
-  <h2 className="text-2xl font-bold mb-4">Neue Aufgabe</h2>
 
-  <div className="flex flex-col sm:flex-row gap-3">
-    <input
-      value={newTask}
-      onChange={(e) => setNewTask(e.target.value)}
-      placeholder="Eigene Aufgabe hinzufügen..."
-      className="flex-1 bg-black border border-gray-700 rounded-xl px-4 py-3"
-    />
+        <div className="bg-gray-900 rounded-2xl p-6 mb-6">
+          <h2 className="text-2xl font-bold mb-4">Neue Aufgabe</h2>
 
-    <button
-      onClick={addTask}
-      className="bg-white text-black px-6 py-3 rounded-xl font-bold"
-    >
-      Hinzufügen
-    </button>
-  </div>
-</div>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <input
+              value={newTask}
+              onChange={(e) => setNewTask(e.target.value)}
+              placeholder="Eigene Aufgabe hinzufügen..."
+              className="flex-1 bg-black border border-gray-700 rounded-xl px-4 py-3"
+            />
+
+            <button
+              onClick={addTask}
+              className="bg-white text-black px-6 py-3 rounded-xl font-bold"
+            >
+              Hinzufügen
+            </button>
+          </div>
+        </div>
+
         <div className="space-y-4 mb-6">
           {tasks.map((task) => (
             <button
