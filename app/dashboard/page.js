@@ -177,8 +177,16 @@ export default function Dashboard() {
     last_completed: today,
   })
 
-  setStreak(newStreak)
-  setMessage('Tag abgeschlossen 🔥 Streak gespeichert.')
+  await supabase
+  .from('daily_tasks')
+  .update({ completed: false })
+  .eq('email', user.email)
+  .eq('date', today)
+
+await loadTasks(user.email)
+
+setStreak(newStreak)
+setMessage('Tag abgeschlossen 🔥 Streak gespeichert.')
 }
   
 
