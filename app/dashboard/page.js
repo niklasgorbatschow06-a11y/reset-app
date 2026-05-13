@@ -17,6 +17,7 @@ const defaultTasks = [
 
 export default function Dashboard() {
   const [tasks, setTasks] = useState([])
+  const [newTask, setNewTask] = useState('')
   const [premium, setPremium] = useState(false)
   const [user, setUser] = useState(null)
   const [authLoading, setAuthLoading] = useState(true)
@@ -40,6 +41,24 @@ export default function Dashboard() {
     if (!data.user) {
       setUser(null)
       setAuthLoading(false)
+      const addTask = async () => {
+  if (!newTask.trim()) return
+
+  const { error } = await supabase.from('daily_tasks').insert({
+    email: user.email,
+    title: newTask,
+    completed: false,
+    date: today,
+  })
+
+  if (error) {
+    alert(error.message)
+    return
+  }
+
+  setNewTask('')
+  await loadTasks(user.email)
+}
       return
     }
 
@@ -242,7 +261,25 @@ export default function Dashboard() {
     await supabase.auth.signOut()
     window.location.href = '/'
   }
+<div className="bg-gray-900 rounded-2xl p-6 mb-6">
+  <h2 className="text-2xl font-bold mb-4">Neue Aufgabe</h2>
 
+  <div className="flex flex-col sm:flex-row gap-3">
+    <input
+      value={newTask}
+      onChange={(e) => setNewTask(e.target.value)}
+      placeholder="Eigene Aufgabe hinzufügen..."
+      className="flex-1 bg-black border border-gray-700 rounded-xl px-4 py-3"
+    />
+
+    <button
+      onClick={addTask}
+      className="bg-white text-black px-6 py-3 rounded-xl font-bold"
+    >
+      Hinzufügen
+    </button>
+  </div>
+</div>
   const completed = tasks.filter((task) => task.completed).length
   const progress =
     tasks.length === 0 ? 0 : Math.round((completed / tasks.length) * 100)
