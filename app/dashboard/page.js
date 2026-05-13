@@ -261,25 +261,7 @@ export default function Dashboard() {
     await supabase.auth.signOut()
     window.location.href = '/'
   }
-<div className="bg-gray-900 rounded-2xl p-6 mb-6">
-  <h2 className="text-2xl font-bold mb-4">Neue Aufgabe</h2>
 
-  <div className="flex flex-col sm:flex-row gap-3">
-    <input
-      value={newTask}
-      onChange={(e) => setNewTask(e.target.value)}
-      placeholder="Eigene Aufgabe hinzufügen..."
-      className="flex-1 bg-black border border-gray-700 rounded-xl px-4 py-3"
-    />
-
-    <button
-      onClick={addTask}
-      className="bg-white text-black px-6 py-3 rounded-xl font-bold"
-    >
-      Hinzufügen
-    </button>
-  </div>
-</div>
   const completed = tasks.filter((task) => task.completed).length
   const progress =
     tasks.length === 0 ? 0 : Math.round((completed / tasks.length) * 100)
@@ -386,7 +368,25 @@ export default function Dashboard() {
             </div>
           </div>
         )}
+<div className="bg-gray-900 rounded-2xl p-6 mb-6">
+  <h2 className="text-2xl font-bold mb-4">Neue Aufgabe</h2>
 
+  <div className="flex flex-col sm:flex-row gap-3">
+    <input
+      value={newTask}
+      onChange={(e) => setNewTask(e.target.value)}
+      placeholder="Eigene Aufgabe hinzufügen..."
+      className="flex-1 bg-black border border-gray-700 rounded-xl px-4 py-3"
+    />
+
+    <button
+      onClick={addTask}
+      className="bg-white text-black px-6 py-3 rounded-xl font-bold"
+    >
+      Hinzufügen
+    </button>
+  </div>
+</div>
         <div className="space-y-4 mb-6">
           {tasks.map((task) => (
             <button
