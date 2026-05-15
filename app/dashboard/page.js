@@ -166,7 +166,19 @@ export default function Dashboard() {
       alert(error.message)
       return
     }
+const deleteTask = async (taskId) => {
+  const { error } = await supabase
+    .from('daily_tasks')
+    .delete()
+    .eq('id', taskId)
 
+  if (error) {
+    alert(error.message)
+    return
+  }
+
+  await loadTasks(user.email)
+}
     setNewTask('')
     await loadTasks(user.email)
   }
@@ -390,22 +402,33 @@ export default function Dashboard() {
         </div>
 
         <div className="space-y-4 mb-6">
-          {tasks.map((task) => (
-            <button
-              key={task.id}
-              onClick={() => toggleTask(task)}
-              className="w-full bg-gray-900 p-4 rounded-xl flex justify-between"
-            >
-              <span
-                className={task.completed ? 'line-through text-gray-500' : ''}
-              >
-                {task.title}
-              </span>
+  {tasks.map((task) => (
+    <div
+      key={task.id}
+      className="w-full bg-gray-900 p-4 rounded-xl flex justify-between items-center gap-4"
+    >
+      <button
+        onClick={() => toggleTask(task)}
+        className="flex-1 flex justify-between text-left"
+      >
+        <span
+          className={task.completed ? 'line-through text-gray-500' : ''}
+        >
+          {task.title}
+        </span>
 
-              <span>{task.completed ? '✅' : '⬜'}</span>
-            </button>
-          ))}
-        </div>
+        <span>{task.completed ? '✅' : '⬜'}</span>
+      </button>
+
+      <button
+        onClick={() => deleteTask(task.id)}
+        className="text-gray-500 hover:text-red-400 font-bold"
+      >
+        Löschen
+      </button>
+    </div>
+  ))}
+</div>
 
         <button
           onClick={completeDay}
