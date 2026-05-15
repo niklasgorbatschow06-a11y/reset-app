@@ -9,7 +9,7 @@ const supabase = createClient(
 )
 
 const defaultTasks = [
-  'Trainiere deinen Koerper',
+  'Trainiere deinen Körper',
   'Arbeite an deinem Ziel',
   'Lerne etwas Neues',
 ]
@@ -163,7 +163,7 @@ export default function Dashboard() {
       .eq('id', taskId)
 
     if (error) {
-      alert('Delete error: ' + error.message)
+      alert('Löschen Fehler: ' + error.message)
       return
     }
 
@@ -174,7 +174,7 @@ export default function Dashboard() {
     const allDone = tasks.every((task) => task.completed)
 
     if (!allDone) {
-      setMessage('Complete all tasks first.')
+      setMessage('Erledige zuerst alle Aufgaben.')
       return
     }
 
@@ -185,7 +185,7 @@ export default function Dashboard() {
       .maybeSingle()
 
     if (data?.last_completed === today) {
-      setMessage('Your streak is already saved for today.')
+      setMessage('Du hast deinen Streak heute schon gesichert.')
       return
     }
 
@@ -206,7 +206,7 @@ export default function Dashboard() {
     })
 
     setStreak(newStreak)
-    setMessage('Day completed. Streak saved.')
+    setMessage('Tag abgeschlossen. Streak gespeichert.')
   }
 
   const startCheckout = async () => {
@@ -223,18 +223,18 @@ export default function Dashboard() {
     const text = await response.text()
     const data = text
       ? JSON.parse(text)
-      : { error: 'Empty response from checkout' }
+      : { error: 'Leere Antwort vom Checkout' }
 
     if (data.url) {
       window.location.href = data.url
     } else {
-      alert(data.error || 'Checkout error')
+      alert(data.error || 'Checkout Fehler')
     }
   }
 
   const askCoach = async () => {
     if (!premium) {
-      alert('AI Coach is only available for Premium.')
+      alert('KI Coach ist nur für Premium verfügbar.')
       return
     }
 
@@ -256,9 +256,9 @@ export default function Dashboard() {
     const text = await response.text()
     const data = text
       ? JSON.parse(text)
-      : { error: 'Empty response from coach' }
+      : { error: 'Leere Antwort vom Coach' }
 
-    setCoachReply(data.reply || data.error || 'Coach could not answer.')
+    setCoachReply(data.reply || data.error || 'Coach konnte nicht antworten.')
     setCoachLoading(false)
   }
 
@@ -274,7 +274,7 @@ export default function Dashboard() {
   if (authLoading) {
     return (
       <main className="min-h-screen bg-black text-white flex items-center justify-center">
-        <p className="text-gray-400">Loading dashboard...</p>
+        <p className="text-gray-400">Lade Dashboard...</p>
       </main>
     )
   }
@@ -282,15 +282,15 @@ export default function Dashboard() {
   if (!user) {
     return (
       <main className="min-h-screen bg-black text-white flex flex-col items-center justify-center px-6 text-center">
-        <h1 className="text-4xl font-bold mb-4">Please log in</h1>
+        <h1 className="text-4xl font-bold mb-4">Bitte einloggen</h1>
         <p className="text-gray-400 mb-6">
-          You need to be logged in to view your dashboard.
+          Du musst eingeloggt sein, um dein Dashboard zu sehen.
         </p>
         <a
           href="/"
           className="bg-white text-black px-8 py-4 rounded-2xl font-bold"
         >
-          Go to login
+          Zum Login
         </a>
       </main>
     )
@@ -301,10 +301,10 @@ export default function Dashboard() {
       <div className="max-w-5xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
           <div>
-            <p className="text-gray-500 mb-2">Welcome back</p>
+            <p className="text-gray-500 mb-2">Willkommen zurück</p>
             <h1 className="text-4xl md:text-5xl font-bold">RESET Dashboard</h1>
             <p className="text-gray-400 mt-2">
-              Focus on what matters today.
+              Fokussiere dich auf das, was heute zählt.
             </p>
           </div>
 
@@ -312,7 +312,7 @@ export default function Dashboard() {
             <div className="bg-gray-900 border border-gray-800 rounded-2xl px-5 py-4 flex-1">
               <p className="text-gray-500 text-sm">Status</p>
               <p className="font-bold">
-                {premium ? 'Premium active' : 'Free Plan'}
+                {premium ? 'Premium aktiv' : 'Free Plan'}
               </p>
             </div>
 
@@ -326,12 +326,12 @@ export default function Dashboard() {
         </div>
 
         <div className="bg-gray-900 rounded-2xl p-6 mb-6">
-          <p className="text-gray-400 mb-2">Your streak</p>
-          <h2 className="text-5xl font-bold">{streak} days</h2>
+          <p className="text-gray-400 mb-2">Dein Streak</p>
+          <h2 className="text-5xl font-bold">{streak} Tage</h2>
         </div>
 
         <div className="bg-gray-900 rounded-2xl p-6 mb-6">
-          <p className="text-gray-400 mb-2">Progress</p>
+          <p className="text-gray-400 mb-2">Fortschritt</p>
 
           <div className="w-full bg-gray-800 rounded-full h-4 mb-4">
             <div
@@ -341,7 +341,7 @@ export default function Dashboard() {
           </div>
 
           <p>
-            {completed} of {tasks.length} done
+            {completed} von {tasks.length} erledigt
           </p>
         </div>
 
@@ -351,23 +351,23 @@ export default function Dashboard() {
               <div>
                 <p className="text-yellow-400 font-bold mb-2">RESET Premium</p>
                 <h2 className="text-3xl font-bold mb-3">
-                  Unlock your AI Coach
+                  Schalte deinen KI-Coach frei
                 </h2>
                 <p className="text-gray-400 max-w-xl">
-                  Get motivation, clear next steps and direct answers when you feel stuck.
+                  Erhalte persönliche Motivation, klare nächste Schritte und direkte Antworten, wenn du festhängst.
                 </p>
               </div>
 
               <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5 min-w-64">
-                <p className="text-gray-400 mb-1">Only</p>
-                <p className="text-4xl font-bold mb-4">9.99 EUR</p>
-                <p className="text-gray-500 mb-4">per month</p>
+                <p className="text-gray-400 mb-1">Nur</p>
+                <p className="text-4xl font-bold mb-4">9,99 €</p>
+                <p className="text-gray-500 mb-4">pro Monat</p>
 
                 <button
                   onClick={startCheckout}
                   className="w-full bg-white text-black py-4 rounded-2xl font-bold"
                 >
-                  Start Premium
+                  Premium starten
                 </button>
               </div>
             </div>
@@ -375,13 +375,13 @@ export default function Dashboard() {
         )}
 
         <div className="bg-gray-900 rounded-2xl p-6 mb-6">
-          <h2 className="text-2xl font-bold mb-4">Add your own task</h2>
+          <h2 className="text-2xl font-bold mb-4">Eigene Aufgabe hinzufügen</h2>
 
           <div className="flex flex-col sm:flex-row gap-3">
             <input
               value={newTask}
               onChange={(e) => setNewTask(e.target.value)}
-              placeholder="What do you want to finish today?"
+              placeholder="Was willst du heute erledigen?"
               className="flex-1 bg-black border border-gray-700 rounded-xl px-4 py-3"
             />
 
@@ -389,7 +389,7 @@ export default function Dashboard() {
               onClick={addTask}
               className="bg-white text-black px-6 py-3 rounded-xl font-bold"
             >
-              Add
+              Hinzufügen
             </button>
           </div>
         </div>
@@ -410,14 +410,14 @@ export default function Dashboard() {
                   {task.title}
                 </span>
 
-                <span>{task.completed ? 'Done' : 'Open'}</span>
+                <span>{task.completed ? 'Erledigt' : 'Offen'}</span>
               </button>
 
               <button
                 onClick={() => deleteTask(task.id)}
                 className="text-gray-500 hover:text-red-400 font-bold"
               >
-                Delete
+                Löschen
               </button>
             </div>
           ))}
@@ -427,7 +427,7 @@ export default function Dashboard() {
           onClick={completeDay}
           className="w-full bg-white text-black py-4 rounded-2xl font-bold mb-4"
         >
-          Complete day
+          Tag abschließen
         </button>
 
         {message && (
@@ -436,11 +436,11 @@ export default function Dashboard() {
 
         <div className="bg-gray-900 rounded-3xl border border-gray-800 p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold">AI Coach</h2>
+            <h2 className="text-2xl font-bold">KI Coach</h2>
 
             {!premium && (
               <span className="text-sm bg-yellow-500 text-black px-3 py-1 rounded-full font-bold">
-                Premium locked
+                Premium gesperrt
               </span>
             )}
           </div>
@@ -448,14 +448,14 @@ export default function Dashboard() {
           {!premium ? (
             <div className="text-center py-8">
               <p className="text-gray-400 mb-6">
-                The AI Coach is only available for Premium users.
+                Der KI-Coach ist nur für Premium-Nutzer verfügbar.
               </p>
 
               <button
                 onClick={startCheckout}
                 className="bg-white text-black px-6 py-3 rounded-2xl font-bold"
               >
-                Unlock Premium
+                Premium freischalten
               </button>
             </div>
           ) : (
@@ -463,7 +463,7 @@ export default function Dashboard() {
               <textarea
                 value={coachInput}
                 onChange={(e) => setCoachInput(e.target.value)}
-                placeholder="Where do you need clarity right now?"
+                placeholder="Wobei brauchst du gerade Klarheit?"
                 className="w-full bg-black border border-gray-700 rounded-xl p-4 mb-4 min-h-28"
               />
 
@@ -472,7 +472,7 @@ export default function Dashboard() {
                 disabled={coachLoading}
                 className="w-full bg-white text-black py-4 rounded-2xl font-bold disabled:opacity-50"
               >
-                {coachLoading ? 'Coach is thinking...' : 'Ask coach'}
+                {coachLoading ? 'Coach denkt...' : 'Coach fragen'}
               </button>
 
               {coachReply && (
