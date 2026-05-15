@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@supabase/supabase-js'
@@ -58,7 +58,10 @@ export default function Dashboard() {
       .eq('email', email)
       .maybeSingle()
 
-    setPremium(Boolean(userData?.is_premium))
+    console.log('USER EMAIL:', email)
+console.log('PREMIUM DATA:', userData)
+
+setPremium(userData?.is_premium === true)
   }
 
   const createTasksIfNeeded = async (email) => {
