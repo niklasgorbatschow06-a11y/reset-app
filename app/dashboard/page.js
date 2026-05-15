@@ -50,14 +50,6 @@ export default function Dashboard() {
   }
 
   const checkPremium = async (email) => {
-    const params = new URLSearchParams(window.location.search)
-
-    if (params.get('success') === 'true') {
-      await supabase.from('users').upsert({ email, is_premium: true })
-      setPremium(true)
-      return
-    }
-
     const { data: userData } = await supabase
       .from('users')
       .select('*')
@@ -284,15 +276,15 @@ export default function Dashboard() {
             <p className="text-gray-400 mt-2">Fokussiere dich auf das, was heute zählt.</p>
           </div>
 
-          <div className="flex gap-3">
-            <div className="bg-gray-900 border border-gray-800 rounded-2xl px-5 py-4">
+          <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+            <div className="bg-gray-900 border border-gray-800 rounded-2xl px-5 py-4 flex-1">
               <p className="text-gray-500 text-sm">Status</p>
               <p className="font-bold">{premium ? 'Premium aktiv 🔥' : 'Free Plan'}</p>
             </div>
 
             <button
               onClick={logout}
-              className="bg-gray-900 border border-gray-800 rounded-2xl px-5 py-4 font-bold text-gray-300 hover:text-white"
+              className="bg-gray-900 border border-gray-800 rounded-2xl px-5 py-4 font-bold text-gray-300 hover:text-white flex-1"
             >
               Logout
             </button>
