@@ -19,12 +19,9 @@ export default function Dashboard() {
   const [premium, setPremium] = useState(false)
   const [user, setUser] = useState(null)
   const [authLoading, setAuthLoading] = useState(true)
-
   const [streak, setStreak] = useState(0)
   const [message, setMessage] = useState('')
-
   const [newTask, setNewTask] = useState('')
-
   const [coachInput, setCoachInput] = useState('')
   const [coachReply, setCoachReply] = useState('')
   const [coachLoading, setCoachLoading] = useState(false)
@@ -45,12 +42,10 @@ export default function Dashboard() {
     }
 
     setUser(data.user)
-
     await checkPremium(data.user.email)
     await createTasksIfNeeded(data.user.email)
     await loadTasks(data.user.email)
     await loadStreak(data.user.email)
-
     setAuthLoading(false)
   }
 
@@ -58,11 +53,7 @@ export default function Dashboard() {
     const params = new URLSearchParams(window.location.search)
 
     if (params.get('success') === 'true') {
-      await supabase.from('users').upsert({
-        email,
-        is_premium: true,
-      })
-
+      await supabase.from('users').upsert({ email, is_premium: true })
       setPremium(true)
       return
     }
@@ -85,14 +76,14 @@ export default function Dashboard() {
 
     if (data && data.length > 0) return
 
-    const tasksToCreate = defaultTasks.map((title) => ({
-      email,
-      title,
-      completed: false,
-      date: today,
-    }))
-
-    await supabase.from('daily_tasks').insert(tasksToCreate)
+    await supabase.from('daily_tasks').insert(
+      defaultTasks.map((title) => ({
+        email,
+        title,
+        completed: false,
+        date: today,
+      }))
+    )
   }
 
   const loadTasks = async (email) => {
@@ -129,7 +120,6 @@ export default function Dashboard() {
         streak: 0,
         last_completed: null,
       })
-
       setStreak(0)
       return
     }
@@ -166,20 +156,22 @@ export default function Dashboard() {
       alert(error.message)
       return
     }
-const deleteTask = async (taskId) => {
-  const { error } = await supabase
-    .from('daily_tasks')
-    .delete()
-    .eq('id', taskId)
 
-  if (error) {
-    alert('Löschen Fehler: ' + error.message)
-    return
+    setNewTask('')
+    await loadTasks(user.email)
   }
 
-  await loadTasks(user.email)
-}
-    setNewTask('')
+  const deleteTask = async (taskId) => {
+    const { error } = await supabase
+      .from('daily_tasks')
+      .delete()
+      .eq('id', taskId)
+
+    if (error) {
+      alert('Löschen Fehler: ' + error.message)
+      return
+    }
+
     await loadTasks(user.email)
   }
 
@@ -223,20 +215,12 @@ const deleteTask = async (taskId) => {
   }
 
   const startCheckout = async () => {
-    const response = await fetch('/api/checkout', {
-      method: 'POST',
-    })
-
+    const response = await fetch('/api/checkout', { method: 'POST' })
     const text = await response.text()
-    const data = text
-      ? JSON.parse(text)
-      : { error: 'Leere Antwort von /api/checkout' }
+    const data = text ? JSON.parse(text) : { error: 'Leere Antwort von /api/checkout' }
 
-    if (data.url) {
-      window.location.href = data.url
-    } else {
-      alert(data.error || 'Checkout Fehler')
-    }
+    if (data.url) window.location.href = data.url
+    else alert(data.error || 'Checkout Fehler')
   }
 
   const askCoach = async () => {
@@ -252,18 +236,12 @@ const deleteTask = async (taskId) => {
 
     const response = await fetch('/api/coach', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        message: coachInput,
-      }),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: coachInput }),
     })
 
     const text = await response.text()
-    const data = text
-      ? JSON.parse(text)
-      : { error: 'Leere Antwort vom Coach' }
+    const data = text ? JSON.parse(text) : { error: 'Leere Antwort vom Coach' }
 
     setCoachReply(data.reply || data.error || 'Coach konnte nicht antworten.')
     setCoachLoading(false)
@@ -275,8 +253,7 @@ const deleteTask = async (taskId) => {
   }
 
   const completed = tasks.filter((task) => task.completed).length
-  const progress =
-    tasks.length === 0 ? 0 : Math.round((completed / tasks.length) * 100)
+  const progress = tasks.length === 0 ? 0 : Math.round((completed / tasks.length) * 100)
 
   if (authLoading) {
     return (
@@ -290,13 +267,7 @@ const deleteTask = async (taskId) => {
     return (
       <main className="min-h-screen bg-black text-white flex flex-col items-center justify-center px-6 text-center">
         <h1 className="text-4xl font-bold mb-4">Bitte einloggen</h1>
-        <p className="text-gray-400 mb-6">
-          Du musst eingeloggt sein, um dein Dashboard zu sehen.
-        </p>
-        <a
-          href="/"
-          className="bg-white text-black px-8 py-4 rounded-2xl font-bold"
-        >
+        <a href="/" className="bg-white text-black px-8 py-4 rounded-2xl font-bold">
           Zum Login
         </a>
       </main>
@@ -310,17 +281,13 @@ const deleteTask = async (taskId) => {
           <div>
             <p className="text-gray-500 mb-2">Willkommen zurück</p>
             <h1 className="text-4xl md:text-5xl font-bold">RESET Dashboard</h1>
-            <p className="text-gray-400 mt-2">
-              Gewinne den heutigen Tag mit klaren Aufgaben.
-            </p>
+            <p className="text-gray-400 mt-2">Gewinne den heutigen Tag mit klaren Aufgaben.</p>
           </div>
 
           <div className="flex gap-3">
             <div className="bg-gray-900 border border-gray-800 rounded-2xl px-5 py-4">
               <p className="text-gray-500 text-sm">Status</p>
-              <p className="font-bold">
-                {premium ? 'Premium aktiv 🔥' : 'Free Plan'}
-              </p>
+              <p className="font-bold">{premium ? 'Premium aktiv 🔥' : 'Free Plan'}</p>
             </div>
 
             <button
@@ -339,51 +306,30 @@ const deleteTask = async (taskId) => {
 
         <div className="bg-gray-900 rounded-2xl p-6 mb-6">
           <p className="text-gray-400 mb-2">Fortschritt</p>
-
           <div className="w-full bg-gray-800 rounded-full h-4 mb-4">
-            <div
-              className="bg-white h-4 rounded-full"
-              style={{ width: `${progress}%` }}
-            />
+            <div className="bg-white h-4 rounded-full" style={{ width: `${progress}%` }} />
           </div>
-
-          <p>
-            {completed} von {tasks.length} erledigt
-          </p>
+          <p>{completed} von {tasks.length} erledigt</p>
         </div>
 
         {!premium && (
           <div className="bg-gradient-to-br from-gray-900 to-black border border-gray-800 rounded-3xl p-6 mb-8">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-              <div>
-                <p className="text-yellow-400 font-bold mb-2">RESET Premium</p>
-                <h2 className="text-3xl font-bold mb-3">
-                  Schalte deinen KI-Coach frei
-                </h2>
-                <p className="text-gray-400 max-w-xl">
-                  Erhalte persönliche Motivation, klare nächste Schritte und direkte Antworten, wenn du festhängst.
-                </p>
-              </div>
-
-              <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5 min-w-64">
-                <p className="text-gray-400 mb-1">Nur</p>
-                <p className="text-4xl font-bold mb-4">9,99 €</p>
-                <p className="text-gray-500 mb-4">pro Monat</p>
-
-                <button
-                  onClick={startCheckout}
-                  className="w-full bg-white text-black py-4 rounded-2xl font-bold"
-                >
-                  Premium starten
-                </button>
-              </div>
-            </div>
+            <p className="text-yellow-400 font-bold mb-2">RESET Premium</p>
+            <h2 className="text-3xl font-bold mb-3">Schalte deinen KI-Coach frei</h2>
+            <p className="text-gray-400 mb-6">
+              Erhalte persönliche Motivation, klare nächste Schritte und direkte Antworten.
+            </p>
+            <button
+              onClick={startCheckout}
+              className="bg-white text-black px-6 py-3 rounded-2xl font-bold"
+            >
+              Premium starten – 9,99 €/Monat
+            </button>
           </div>
         )}
 
         <div className="bg-gray-900 rounded-2xl p-6 mb-6">
           <h2 className="text-2xl font-bold mb-4">Neue Aufgabe</h2>
-
           <div className="flex flex-col sm:flex-row gap-3">
             <input
               value={newTask}
@@ -391,7 +337,6 @@ const deleteTask = async (taskId) => {
               placeholder="Eigene Aufgabe hinzufügen..."
               className="flex-1 bg-black border border-gray-700 rounded-xl px-4 py-3"
             />
-
             <button
               onClick={addTask}
               className="bg-white text-black px-6 py-3 rounded-xl font-bold"
@@ -402,33 +347,30 @@ const deleteTask = async (taskId) => {
         </div>
 
         <div className="space-y-4 mb-6">
-  {tasks.map((task) => (
-    <div
-      key={task.id}
-      className="w-full bg-gray-900 p-4 rounded-xl flex justify-between items-center gap-4"
-    >
-      <button
-        onClick={() => toggleTask(task)}
-        className="flex-1 flex justify-between text-left"
-      >
-        <span
-          className={task.completed ? 'line-through text-gray-500' : ''}
-        >
-          {task.title}
-        </span>
+          {tasks.map((task) => (
+            <div
+              key={task.id}
+              className="w-full bg-gray-900 p-4 rounded-xl flex justify-between items-center gap-4"
+            >
+              <button
+                onClick={() => toggleTask(task)}
+                className="flex-1 flex justify-between text-left"
+              >
+                <span className={task.completed ? 'line-through text-gray-500' : ''}>
+                  {task.title}
+                </span>
+                <span>{task.completed ? '✅' : '⬜'}</span>
+              </button>
 
-        <span>{task.completed ? '✅' : '⬜'}</span>
-      </button>
-
-      <button
-        onClick={() => deleteTask(task.id)}
-        className="text-gray-500 hover:text-red-400 font-bold"
-      >
-        Löschen
-      </button>
-    </div>
-  ))}
-</div>
+              <button
+                onClick={() => deleteTask(task.id)}
+                className="text-gray-500 hover:text-red-400 font-bold"
+              >
+                Löschen
+              </button>
+            </div>
+          ))}
+        </div>
 
         <button
           onClick={completeDay}
@@ -437,14 +379,11 @@ const deleteTask = async (taskId) => {
           Tag abschließen
         </button>
 
-        {message && (
-          <p className="text-center text-gray-400 mb-8">{message}</p>
-        )}
+        {message && <p className="text-center text-gray-400 mb-8">{message}</p>}
 
         <div className="bg-gray-900 rounded-3xl border border-gray-800 p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold">KI Coach</h2>
-
             {!premium && (
               <span className="text-sm bg-yellow-500 text-black px-3 py-1 rounded-full font-bold">
                 Premium 🔒
@@ -457,7 +396,6 @@ const deleteTask = async (taskId) => {
               <p className="text-gray-400 mb-6">
                 Der KI-Coach ist nur für Premium-Nutzer verfügbar.
               </p>
-
               <button
                 onClick={startCheckout}
                 className="bg-white text-black px-6 py-3 rounded-2xl font-bold"
@@ -473,7 +411,6 @@ const deleteTask = async (taskId) => {
                 placeholder="Was hält dich heute zurück?"
                 className="w-full bg-black border border-gray-700 rounded-xl p-4 mb-4 min-h-28"
               />
-
               <button
                 onClick={askCoach}
                 disabled={coachLoading}
@@ -481,7 +418,6 @@ const deleteTask = async (taskId) => {
               >
                 {coachLoading ? 'Coach denkt...' : 'Coach fragen'}
               </button>
-
               {coachReply && (
                 <div className="mt-4 bg-black border border-gray-800 rounded-xl p-4 text-gray-300 whitespace-pre-wrap">
                   {coachReply}
