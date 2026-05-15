@@ -58,9 +58,6 @@ export default function Dashboard() {
       .eq('email', email)
       .maybeSingle()
 
-    console.log('USER EMAIL:', email)
-console.log('PREMIUM DATA:', userData)
-
 setPremium(userData?.is_premium === true)
   }
 
