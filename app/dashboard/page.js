@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@supabase/supabase-js'
@@ -312,7 +312,7 @@ export default function Dashboard() {
             <div className="bg-gray-900 border border-gray-800 rounded-2xl px-5 py-4 flex-1">
               <p className="text-gray-500 text-sm">Status</p>
               <p className="font-bold">
-                {premium ? 'Premium aktiv' : 'Free Plan'}
+                {premium ? 'Premium aktiv 🔥' : 'Free Plan'}
               </p>
             </div>
 
@@ -327,7 +327,7 @@ export default function Dashboard() {
 
         <div className="bg-gray-900 rounded-2xl p-6 mb-6">
           <p className="text-gray-400 mb-2">Dein Streak</p>
-          <h2 className="text-5xl font-bold">{streak} Tage</h2>
+          <h2 className="text-5xl font-bold">🔥 {streak} Tage</h2>
         </div>
 
         <div className="bg-gray-900 rounded-2xl p-6 mb-6">
@@ -410,7 +410,7 @@ export default function Dashboard() {
                   {task.title}
                 </span>
 
-                <span>{task.completed ? 'Erledigt' : 'Offen'}</span>
+                <span>{task.completed ? '✅' : '⬜'}</span>
               </button>
 
               <button
