@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@supabase/supabase-js'
@@ -9,7 +9,7 @@ const supabase = createClient(
 )
 
 const defaultTasks = [
-  'Trainiere deinen Körper',
+  'Trainiere deinen KÃ¶rper',
   'Arbeite an deinem Ziel',
   'Lerne etwas Neues',
 ]
@@ -160,7 +160,7 @@ export default function Dashboard() {
       .eq('id', taskId)
 
     if (error) {
-      alert('Löschen Fehler: ' + error.message)
+      alert('LÃ¶schen Fehler: ' + error.message)
       return
     }
 
@@ -203,7 +203,7 @@ export default function Dashboard() {
     })
 
     setStreak(newStreak)
-    setMessage('Tag abgeschlossen 🔥 Streak gespeichert.')
+    setMessage('Tag abgeschlossen ðŸ”¥ Streak gespeichert.')
   }
 
   const startCheckout = async () => {
@@ -217,7 +217,7 @@ export default function Dashboard() {
 
   const askCoach = async () => {
     if (!premium) {
-      alert('KI Coach ist nur für Premium verfügbar 🔒')
+      alert('KI Coach ist nur fÃ¼r Premium verfÃ¼gbar ðŸ”’')
       return
     }
 
@@ -271,15 +271,15 @@ export default function Dashboard() {
       <div className="max-w-5xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
           <div>
-            <p className="text-gray-500 mb-2">Willkommen zurück</p>
+            <p className="text-gray-500 mb-2">Willkommen zurÃ¼ck</p>
             <h1 className="text-4xl md:text-5xl font-bold">RESET Dashboard</h1>
-            <p className="text-gray-400 mt-2">Fokussiere dich auf das, was heute zählt.</p>
+            <p className="text-gray-400 mt-2">Fokussiere dich auf das, was heute zÃ¤hlt.</p>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
             <div className="bg-gray-900 border border-gray-800 rounded-2xl px-5 py-4 flex-1">
               <p className="text-gray-500 text-sm">Status</p>
-              <p className="font-bold">{premium ? 'Premium aktiv 🔥' : 'Free Plan'}</p>
+              <p className="font-bold">{premium ? 'Premium aktiv ðŸ”¥' : 'Free Plan'}</p>
             </div>
 
             <button
@@ -293,7 +293,7 @@ export default function Dashboard() {
 
         <div className="bg-gray-900 rounded-2xl p-6 mb-6">
           <p className="text-gray-400 mb-2">Dein Streak</p>
-          <h2 className="text-5xl font-bold">🔥 {streak} Tage</h2>
+          <h2 className="text-5xl font-bold">ðŸ”¥ {streak} Tage</h2>
         </div>
 
         <div className="bg-gray-900 rounded-2xl p-6 mb-6">
@@ -309,19 +309,19 @@ export default function Dashboard() {
             <p className="text-yellow-400 font-bold mb-2">RESET Premium</p>
             <h2 className="text-3xl font-bold mb-3">Schalte deinen KI-Coach frei</h2>
             <p className="text-gray-400 mb-6">
-              Erhalte persönliche Motivation, klare nächste Schritte und direkte Antworten.
+              Erhalte persÃ¶nliche Motivation, klare nÃ¤chste Schritte und direkte Antworten.
             </p>
             <button
               onClick={startCheckout}
               className="bg-white text-black px-6 py-3 rounded-2xl font-bold"
             >
-              Premium starten – 9,99 €/Monat
+              Premium starten â€“ 9,99 â‚¬/Monat
             </button>
           </div>
         )}
 
         <div className="bg-gray-900 rounded-2xl p-6 mb-6">
-          <h2 className="text-2xl font-bold mb-4">Eigene Aufgabe hinzufügen</h2>
+          <h2 className="text-2xl font-bold mb-4">Eigene Aufgabe hinzufÃ¼gen</h2>
           <div className="flex flex-col sm:flex-row gap-3">
             <input
               value={newTask}
@@ -333,7 +333,7 @@ export default function Dashboard() {
               onClick={addTask}
               className="bg-white text-black px-6 py-3 rounded-xl font-bold"
             >
-              Hinzufügen
+              HinzufÃ¼gen
             </button>
           </div>
         </div>
@@ -351,14 +351,14 @@ export default function Dashboard() {
                 <span className={task.completed ? 'line-through text-gray-500' : ''}>
                   {task.title}
                 </span>
-                <span>{task.completed ? '✅' : '⬜'}</span>
+                <span>{task.completed ? 'âœ…' : 'â¬œ'}</span>
               </button>
 
               <button
                 onClick={() => deleteTask(task.id)}
                 className="text-gray-500 hover:text-red-400 font-bold"
               >
-                Löschen
+                LÃ¶schen
               </button>
             </div>
           ))}
@@ -368,7 +368,7 @@ export default function Dashboard() {
           onClick={completeDay}
           className="w-full bg-white text-black py-4 rounded-2xl font-bold mb-4"
         >
-          Tag abschließen
+          Tag abschlieÃŸen
         </button>
 
         {message && <p className="text-center text-gray-400 mb-8">{message}</p>}
@@ -378,7 +378,7 @@ export default function Dashboard() {
             <h2 className="text-2xl font-bold">KI Coach</h2>
             {!premium && (
               <span className="text-sm bg-yellow-500 text-black px-3 py-1 rounded-full font-bold">
-                Premium 🔒
+                Premium ðŸ”’
               </span>
             )}
           </div>
@@ -386,7 +386,7 @@ export default function Dashboard() {
           {!premium ? (
             <div className="text-center py-8">
               <p className="text-gray-400 mb-6">
-                Der KI-Coach ist nur für Premium-Nutzer verfügbar.
+                Der KI-Coach ist nur fÃ¼r Premium-Nutzer verfÃ¼gbar.
               </p>
               <button
                 onClick={startCheckout}
