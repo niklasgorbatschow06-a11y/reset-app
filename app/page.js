@@ -34,43 +34,92 @@ export default function Home() {
       password,
     })
 
-    if (error) alert(error.message)
-    else alert('Account erstellt. Jetzt einloggen.')
+    if (error) {
+      alert(error.message)
+      return
+    }
+
+    alert('Account erstellt. Du kannst dich jetzt einloggen.')
   }
 
   return (
-    <main className="min-h-screen bg-black text-white flex flex-col items-center justify-center px-6">
-      <h1 className="text-6xl font-bold mb-6">RESET</h1>
+    <main className="min-h-screen bg-black text-white px-6 py-10">
+      <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-10 items-center min-h-[85vh]">
+        <section>
+          <div className="inline-block mb-6 rounded-full border border-gray-800 px-4 py-2 text-sm text-gray-400">
+            RESET · Daily Discipline System
+          </div>
 
-      <input
-        type="email"
-        placeholder="E-Mail"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        className="bg-gray-900 border border-gray-700 px-4 py-3 rounded-xl w-full max-w-sm mb-4"
-      />
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+            Gewinne deinen Tag. Jeden Tag.
+          </h1>
 
-      <input
-        type="password"
-        placeholder="Passwort"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        className="bg-gray-900 border border-gray-700 px-4 py-3 rounded-xl w-full max-w-sm mb-4"
-      />
+          <p className="text-gray-400 text-lg md:text-xl max-w-xl mb-8">
+            RESET hilft dir mit täglichen Aufgaben, Streaks, Fortschritt und einem KI-Coach dabei, Struktur aufzubauen.
+          </p>
 
-      <button
-        onClick={signIn}
-        className="bg-white text-black px-8 py-4 rounded-2xl font-bold mb-4 w-full max-w-sm"
-      >
-        Einloggen
-      </button>
+          <div className="grid sm:grid-cols-3 gap-4 max-w-xl">
+            <div className="bg-gray-900 border border-gray-800 rounded-2xl p-4">
+              <p className="text-2xl font-bold">🔥</p>
+              <p className="font-bold mt-2">Streaks</p>
+              <p className="text-gray-500 text-sm">Bleib dran.</p>
+            </div>
 
-      <button
-        onClick={signUp}
-        className="bg-gray-800 text-white px-8 py-4 rounded-2xl font-bold w-full max-w-sm"
-      >
-        Registrieren
-      </button>
+            <div className="bg-gray-900 border border-gray-800 rounded-2xl p-4">
+              <p className="text-2xl font-bold">✅</p>
+              <p className="font-bold mt-2">Tasks</p>
+              <p className="text-gray-500 text-sm">Klarer Fokus.</p>
+            </div>
+
+            <div className="bg-gray-900 border border-gray-800 rounded-2xl p-4">
+              <p className="text-2xl font-bold">🤖</p>
+              <p className="font-bold mt-2">KI-Coach</p>
+              <p className="text-gray-500 text-sm">Premium.</p>
+            </div>
+          </div>
+        </section>
+
+        <section className="bg-gray-900 border border-gray-800 rounded-3xl p-6 md:p-8">
+          <h2 className="text-3xl font-bold mb-2">Einloggen</h2>
+          <p className="text-gray-400 mb-6">
+            Starte dein Dashboard und sichere deinen Fortschritt.
+          </p>
+
+          <input
+            type="email"
+            placeholder="E-Mail"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="bg-black border border-gray-700 px-4 py-3 rounded-xl w-full mb-4"
+          />
+
+          <input
+            type="password"
+            placeholder="Passwort"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="bg-black border border-gray-700 px-4 py-3 rounded-xl w-full mb-4"
+          />
+
+          <button
+            onClick={signIn}
+            className="bg-white text-black px-8 py-4 rounded-2xl font-bold mb-4 w-full"
+          >
+            Einloggen
+          </button>
+
+          <button
+            onClick={signUp}
+            className="bg-black border border-gray-700 text-white px-8 py-4 rounded-2xl font-bold w-full"
+          >
+            Kostenlos registrieren
+          </button>
+
+          <p className="text-gray-500 text-sm mt-6 text-center">
+            Premium optional · 9,99 €/Monat
+          </p>
+        </section>
+      </div>
     </main>
   )
 }
