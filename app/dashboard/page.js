@@ -281,7 +281,7 @@ export default function Dashboard() {
           <div>
             <p className="text-gray-500 mb-2">Willkommen zurück</p>
             <h1 className="text-4xl md:text-5xl font-bold">RESET Dashboard</h1>
-            <p className="text-gray-400 mt-2">Gewinne den heutigen Tag mit klaren Aufgaben.</p>
+            <p className="text-gray-400 mt-2">Fokussiere dich auf das, was heute zählt.</p>
           </div>
 
           <div className="flex gap-3">
@@ -329,12 +329,12 @@ export default function Dashboard() {
         )}
 
         <div className="bg-gray-900 rounded-2xl p-6 mb-6">
-          <h2 className="text-2xl font-bold mb-4">Neue Aufgabe</h2>
+          <h2 className="text-2xl font-bold mb-4">Eigene Aufgabe hinzufügen</h2>
           <div className="flex flex-col sm:flex-row gap-3">
             <input
               value={newTask}
               onChange={(e) => setNewTask(e.target.value)}
-              placeholder="Eigene Aufgabe hinzufügen..."
+              placeholder="Was willst du heute erledigen?"
               className="flex-1 bg-black border border-gray-700 rounded-xl px-4 py-3"
             />
             <button
@@ -408,7 +408,7 @@ export default function Dashboard() {
               <textarea
                 value={coachInput}
                 onChange={(e) => setCoachInput(e.target.value)}
-                placeholder="Was hält dich heute zurück?"
+                placeholder="Wobei brauchst du gerade Klarheit?"
                 className="w-full bg-black border border-gray-700 rounded-xl p-4 mb-4 min-h-28"
               />
               <button

@@ -47,7 +47,7 @@ export default function Home() {
       <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-10 items-center min-h-[85vh]">
         <section>
           <div className="inline-block mb-6 rounded-full border border-gray-800 px-4 py-2 text-sm text-gray-400">
-            RESET · Daily Discipline System
+            RESET · Dein System für tägliche Disziplin
           </div>
 
           <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
@@ -55,7 +55,7 @@ export default function Home() {
           </h1>
 
           <p className="text-gray-400 text-lg md:text-xl max-w-xl mb-8">
-            RESET hilft dir mit täglichen Aufgaben, Streaks, Fortschritt und einem KI-Coach dabei, Struktur aufzubauen.
+            Baue Fokus, Disziplin und Momentum auf – mit täglichen Aufgaben, Streaks, Fortschritt und einem KI-Coach, der dich auf Kurs hält.
           </p>
 
           <div className="grid sm:grid-cols-3 gap-4 max-w-xl">
@@ -82,7 +82,7 @@ export default function Home() {
         <section className="bg-gray-900 border border-gray-800 rounded-3xl p-6 md:p-8">
           <h2 className="text-3xl font-bold mb-2">Einloggen</h2>
           <p className="text-gray-400 mb-6">
-            Starte dein Dashboard und sichere deinen Fortschritt.
+            Logge dich ein und arbeite an deinem heutigen Fortschritt.
           </p>
 
           <input
@@ -116,7 +116,7 @@ export default function Home() {
           </button>
 
           <p className="text-gray-500 text-sm mt-6 text-center">
-            Premium optional · 9,99 €/Monat
+            Kostenlos starten · Premium-Coach optional für 9,99 €/Monat
           </p>
         </section>
       </div>
