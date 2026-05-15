@@ -7,19 +7,22 @@ export async function POST(request) {
   try {
     const { email } = await request.json()
 
-    if (!email) {
-      return NextResponse.json(
-        { error: 'Keine E-Mail gefunden. Bitte neu einloggen.' },
-        { status: 400 }
-      )
-    }
-
     const session = await stripe.checkout.sessions.create({
       customer_email: email,
       mode: 'subscription',
+      payment_method_types: ['card'],
       line_items: [
         {
-          price: process.env.STRIPE_PRICE_ID,
+          price_data: {
+            currency: 'eur',
+            product_data: {
+              name: 'RESET Premium',
+            },
+            unit_amount: 999,
+            recurring: {
+              interval: 'month',
+            },
+          },
           quantity: 1,
         },
       ],
