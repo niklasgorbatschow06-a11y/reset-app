@@ -173,10 +173,11 @@ const deleteTask = async (taskId) => {
     .eq('id', taskId)
 
   if (error) {
-    alert(error.message)
+    alert('Löschen Fehler: ' + error.message)
     return
   }
 
+  alert('Aufgabe gelöscht')
   await loadTasks(user.email)
 }
     setNewTask('')
