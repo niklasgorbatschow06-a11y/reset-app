@@ -120,6 +120,18 @@ export default function Home() {
           </p>
         </section>
       </div>
+      <footer className="max-w-6xl mx-auto border-t border-gray-800 pt-6 mt-10 flex flex-col sm:flex-row gap-4 justify-between text-sm text-gray-500">
+  <p>© 2026 RESET</p>
+
+  <div className="flex gap-4">
+    <a href="/impressum" className="hover:text-white">
+      Impressum
+    </a>
+    <a href="/datenschutz" className="hover:text-white">
+      Datenschutz
+    </a>
+  </div>
+</footer>
     </main>
   )
 }
