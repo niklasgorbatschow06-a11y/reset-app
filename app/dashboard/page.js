@@ -25,6 +25,7 @@ export default function Dashboard() {
   const [coachInput, setCoachInput] = useState('')
   const [coachReply, setCoachReply] = useState('')
   const [coachLoading, setCoachLoading] = useState(false)
+  const [successMessage, setSuccessMessage] = useState('')
 
   const today = new Date().toISOString().split('T')[0]
 
@@ -42,7 +43,11 @@ export default function Dashboard() {
     }
 
     setUser(data.user)
+const params = new URLSearchParams(window.location.search)
 
+if (params.get('success') === 'true') {
+  setSuccessMessage('Premium wurde aktiviert. Willkommen bei RESET Premium.')
+}
     await checkPremium(data.user.email)
     await createTasksIfNeeded(data.user.email)
     await loadTasks(data.user.email)
@@ -324,7 +329,11 @@ setPremium(userData?.is_premium === true)
             </button>
           </div>
         </div>
-
+{successMessage && (
+  <div className="bg-green-500 text-black px-5 py-4 rounded-2xl mb-6 font-bold">
+    {successMessage}
+  </div>
+)}
         <div className="bg-gray-900 rounded-2xl p-6 mb-6">
           <p className="text-gray-400 mb-2">Dein Streak</p>
           <h2 className="text-5xl font-bold">🔥 {streak} Tage</h2>
