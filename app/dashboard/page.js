@@ -361,7 +361,30 @@ const openCustomerPortal = async () => {
   <div className="bg-green-500 text-black px-5 py-4 rounded-2xl mb-6 font-bold">
     {successMessage}
   </div>
-)}
+)}<div className="grid md:grid-cols-3 gap-4 mb-6">
+  <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5">
+    <p className="text-gray-500 text-sm mb-1">Heute</p>
+    <p className="font-bold">
+      {new Date().toLocaleDateString('de-DE', {
+        weekday: 'long',
+        day: '2-digit',
+        month: 'long',
+      })}
+    </p>
+  </div>
+
+  <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5">
+    <p className="text-gray-500 text-sm mb-1">Aufgaben</p>
+    <p className="font-bold">
+      {completed}/{tasks.length} erledigt
+    </p>
+  </div>
+
+  <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5">
+    <p className="text-gray-500 text-sm mb-1">Fortschritt</p>
+    <p className="font-bold">{progress}%</p>
+  </div>
+</div>
         <div className="bg-gray-900 rounded-2xl p-6 mb-6">
           <p className="text-gray-400 mb-2">Dein Streak</p>
           <h2 className="text-5xl font-bold">🔥 {streak} Tage</h2>
