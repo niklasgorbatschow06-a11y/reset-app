@@ -496,7 +496,22 @@ const openCustomerPortal = async () => {
               </button>
             </div>
           ) : (
-            <>
+            <><div className="grid sm:grid-cols-2 gap-3 mb-4">
+  {[
+    'Ich habe keine Motivation',
+    'Ich weiß nicht, womit ich anfangen soll',
+    'Ich habe heute versagt',
+    'Gib mir einen 10-Minuten-Plan',
+  ].map((prompt) => (
+    <button
+      key={prompt}
+      onClick={() => setCoachInput(prompt)}
+      className="bg-black border border-gray-800 rounded-xl px-4 py-3 text-left text-gray-300 hover:text-white hover:border-gray-600"
+    >
+      {prompt}
+    </button>
+  ))}
+</div>
               <textarea
                 value={coachInput}
                 onChange={(e) => setCoachInput(e.target.value)}
