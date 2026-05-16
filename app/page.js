@@ -57,8 +57,22 @@ export default function Home() {
           <p className="text-gray-400 text-lg md:text-xl max-w-xl mb-8">
             Baue Fokus, Disziplin und Momentum auf – mit täglichen Aufgaben, Streaks, Fortschritt und einem KI-Coach, der dich auf Kurs hält.
           </p>
+<div className="flex flex-col sm:flex-row gap-3 mb-8">
+  <a
+    href="#login"
+    className="bg-white text-black px-6 py-4 rounded-2xl font-bold text-center"
+  >
+    Kostenlos starten
+  </a>
 
-          <div className="grid sm:grid-cols-3 gap-4 max-w-xl">
+  <a
+    href="#features"
+    className="bg-gray-900 border border-gray-800 text-white px-6 py-4 rounded-2xl font-bold text-center"
+  >
+    Mehr erfahren
+  </a>
+</div>
+          <div id="features" className="grid sm:grid-cols-3 gap-4 max-w-xl">
             <div className="bg-gray-900 border border-gray-800 rounded-2xl p-4">
               <p className="text-2xl font-bold">🔥</p>
               <p className="font-bold mt-2">Streaks</p>
@@ -79,7 +93,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="bg-gray-900 border border-gray-800 rounded-3xl p-6 md:p-8">
+        <section id="login" className="bg-gray-900 border border-gray-800 rounded-3xl p-6 md:p-8">
           <h2 className="text-3xl font-bold mb-2">Einloggen</h2>
           <p className="text-gray-400 mb-6">
             Logge dich ein und arbeite an deinem heutigen Fortschritt.
