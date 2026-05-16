@@ -92,7 +92,16 @@ export default function Home() {
             </div>
           </div>
         </section>
-
+          <div className="mt-8 border border-gray-800 rounded-3xl p-5 bg-gray-950 max-w-xl">
+  <p className="text-gray-400 text-sm mb-2">Für wen RESET ist</p>
+  <p className="text-white font-bold text-lg mb-2">
+    Für Menschen, die Struktur, Fokus und Momentum aufbauen wollen.
+  </p>
+  <p className="text-gray-500">
+    Keine überladene Produktivitäts-App. Kein kompliziertes System.
+    Nur tägliche Aufgaben, Streaks und ein Coach, der dich wieder auf Kurs bringt.
+  </p>
+</div>
         <section id="login" className="bg-gray-900 border border-gray-800 rounded-3xl p-6 md:p-8">
           <h2 className="text-3xl font-bold mb-2">Einloggen</h2>
           <p className="text-gray-400 mb-6">
