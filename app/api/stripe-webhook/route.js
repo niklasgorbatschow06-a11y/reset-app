@@ -23,22 +23,57 @@ export async function POST(request) {
     )
   } catch (error) {
     return NextResponse.json(
-      { error: `Webhook signature verification failed: ${error.message}` },
+      { error: `Webhook Error: ${error.message}` },
       { status: 400 }
     )
   }
 
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object
-    const email = session.customer_email
+  try {
+    if (event.type === 'checkout.session.completed') {
+      const session = event.data.object
+      const email = session.customer_email || session.customer_details?.email
 
-    if (email) {
-      await supabaseAdmin.from('users').upsert({
-        email,
-        is_premium: true,
-      })
+      if (email) {
+        await supabaseAdmin
+          .from('users')
+          .upsert(
+            {
+              email,
+              is_premium: true,
+            },
+            {
+              onConflict: 'email',
+            }
+          )
+      }
     }
-  }
 
-  return NextResponse.json({ received: true })
+    if (event.type === 'customer.subscription.deleted') {
+      const subscription = event.data.object
+
+      const customer = await stripe.customers.retrieve(subscription.customer)
+      const email = customer.email
+
+      if (email) {
+        await supabaseAdmin
+          .from('users')
+          .upsert(
+            {
+              email,
+              is_premium: false,
+            },
+            {
+              onConflict: 'email',
+            }
+          )
+      }
+    }
+
+    return NextResponse.json({ received: true })
+  } catch (error) {
+    return NextResponse.json(
+      { error: error.message || 'Webhook Handler Fehler' },
+      { status: 500 }
+    )
+  }
 }
