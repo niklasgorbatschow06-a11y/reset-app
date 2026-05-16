@@ -266,7 +266,28 @@ setPremium(userData?.is_premium === true)
     setCoachReply(data.reply || data.error || 'Coach konnte nicht antworten.')
     setCoachLoading(false)
   }
+const openCustomerPortal = async () => {
+  const response = await fetch('/api/customer-portal', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      email: user.email,
+    }),
+  })
 
+  const text = await response.text()
+  const data = text
+    ? JSON.parse(text)
+    : { error: 'Leere Antwort vom Customer Portal' }
+
+  if (data.url) {
+    window.location.href = data.url
+  } else {
+    alert(data.error || 'Customer Portal Fehler')
+  }
+}
   const logout = async () => {
     await supabase.auth.signOut()
     window.location.href = '/'
@@ -320,7 +341,14 @@ setPremium(userData?.is_premium === true)
                 {premium ? 'Premium aktiv 🔥' : 'Free Plan'}
               </p>
             </div>
-
+{premium && (
+  <button
+    onClick={openCustomerPortal}
+    className="bg-gray-900 border border-gray-800 rounded-2xl px-5 py-4 font-bold text-gray-300 hover:text-white flex-1"
+  >
+    Abo verwalten
+  </button>
+)}
             <button
               onClick={logout}
               className="bg-gray-900 border border-gray-800 rounded-2xl px-5 py-4 font-bold text-gray-300 hover:text-white flex-1"
