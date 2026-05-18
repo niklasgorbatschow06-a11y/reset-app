@@ -494,8 +494,10 @@ const openCustomerPortal = async () => {
         </button>
 
         {message && (
-          <p className="text-center text-gray-400 mb-8">{message}</p>
-        )}
+  <div className="bg-gray-900 border border-gray-800 rounded-2xl p-4 text-center text-gray-300 mb-8">
+    {message}
+  </div>
+)}
 
         <div className="bg-gray-900 rounded-3xl border border-gray-800 p-6">
           <div className="flex items-center justify-between mb-4">
