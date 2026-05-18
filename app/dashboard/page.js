@@ -162,6 +162,9 @@ setPremium(userData?.is_premium === true)
   }
 
   const deleteTask = async (taskId) => {
+    const confirmed = confirm('Aufgabe wirklich löschen?')
+
+if (!confirmed) return
     const { error } = await supabase
       .from('daily_tasks')
       .delete()
