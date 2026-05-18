@@ -458,7 +458,13 @@ const openCustomerPortal = async () => {
         </div>
 
         <div className="space-y-4 mb-6">
-          {tasks.map((task) => (
+  {tasks.length === 0 && (
+    <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 text-center text-gray-400">
+      Noch keine Aufgaben. Füge deine erste Aufgabe hinzu.
+    </div>
+  )}
+
+  {tasks.map((task) => (
             <div
               key={task.id}
               className="w-full bg-gray-900 p-4 rounded-xl flex justify-between items-center gap-4"
