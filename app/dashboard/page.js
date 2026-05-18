@@ -46,9 +46,8 @@ export default function Dashboard() {
 const params = new URLSearchParams(window.location.search)
 
 if (params.get('success') === 'true') {
-  setSuccessMessage('Zahlung abgeschlossen. Premium wird geprüft...')
+  setSuccessMessage('Premium wurde aktiviert. Willkommen bei RESET Premium.')
 }
-
     await checkPremium(data.user.email)
     await createTasksIfNeeded(data.user.email)
     await loadTasks(data.user.email)
@@ -335,15 +334,16 @@ const openCustomerPortal = async () => {
             </p>
           </div>
 
-          <div className="bg-gray-900 border border-gray-800 rounded-2xl px-5 py-4 flex-1">
-  <p className="text-gray-500 text-sm">Status</p>
-  <p className="font-bold">
-    {premium ? 'Premium aktiv 🔥' : 'Free Plan'}
-  </p>
-  <p className="text-gray-500 text-xs mt-1">
-    {premium ? 'KI-Coach freigeschaltet' : 'Basis-Funktionen aktiv'}
-  </p>
-</div>
+          <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+            <div className="bg-gray-900 border border-gray-800 rounded-2xl px-5 py-4 flex-1">
+              <p className="text-gray-500 text-sm">Status</p>
+              <p className="font-bold">
+                {premium ? 'Premium aktiv 🔥' : 'Free Plan'}
+                <p className="text-gray-500 text-xs mt-1">
+  {premium ? 'KI-Coach freigeschaltet' : 'Basis-Funktionen aktiv'}
+</p>
+              </p>
+            </div>
 {premium && (
   <button
     onClick={openCustomerPortal}
@@ -360,7 +360,7 @@ const openCustomerPortal = async () => {
             </button>
           </div>
         </div>
-{successMessage && premium && (
+{successMessage && (
   <div className="bg-green-500 text-black px-5 py-4 rounded-2xl mb-6 font-bold">
     {successMessage}
   </div>
