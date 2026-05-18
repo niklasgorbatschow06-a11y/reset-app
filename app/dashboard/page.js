@@ -513,7 +513,22 @@ const openCustomerPortal = async () => {
           {!premium ? (
             <div className="text-center py-8">
               <p className="text-gray-400 mb-6">
-                Der KI-Coach ist nur für Premium-Nutzer verfügbar.
+                <div className="text-center py-8">
+  <p className="text-gray-400 mb-3">
+    Der KI-Coach ist Teil von RESET Premium.
+  </p>
+
+  <p className="text-gray-500 mb-6">
+    Er hilft dir bei Motivation, Fokus, Tagesplanung und klaren nächsten Schritten.
+  </p>
+
+  <button
+    onClick={startCheckout}
+    className="bg-white text-black px-6 py-3 rounded-2xl font-bold"
+  >
+    Premium freischalten
+  </button>
+</div>
               </p>
 
               <button
