@@ -32,6 +32,7 @@ export async function POST(request) {
     if (event.type === 'checkout.session.completed') {
       const session = event.data.object
       const email = session.customer_email || session.customer_details?.email
+      const customerId = session.customer
 
       if (email) {
         await supabaseAdmin
@@ -40,6 +41,7 @@ export async function POST(request) {
             {
               email,
               is_premium: true,
+              stripe_customer_id: customerId,
             },
             {
               onConflict: 'email',
@@ -50,22 +52,21 @@ export async function POST(request) {
 
     if (event.type === 'customer.subscription.deleted') {
       const subscription = event.data.object
+      const customerId = subscription.customer
 
-      const customer = await stripe.customers.retrieve(subscription.customer)
-      const email = customer.email
+      const { data: userData } = await supabaseAdmin
+        .from('users')
+        .select('*')
+        .eq('stripe_customer_id', customerId)
+        .maybeSingle()
 
-      if (email) {
+      if (userData?.email) {
         await supabaseAdmin
           .from('users')
-          .upsert(
-            {
-              email,
-              is_premium: false,
-            },
-            {
-              onConflict: 'email',
-            }
-          )
+          .update({
+            is_premium: false,
+          })
+          .eq('email', userData.email)
       }
     }
 
