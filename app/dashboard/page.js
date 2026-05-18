@@ -46,8 +46,9 @@ export default function Dashboard() {
 const params = new URLSearchParams(window.location.search)
 
 if (params.get('success') === 'true') {
-  setSuccessMessage('Premium wurde aktiviert. Willkommen bei RESET Premium.')
+  setSuccessMessage('Zahlung abgeschlossen. Premium wird geprüft...')
 }
+
     await checkPremium(data.user.email)
     await createTasksIfNeeded(data.user.email)
     await loadTasks(data.user.email)
@@ -357,7 +358,7 @@ const openCustomerPortal = async () => {
             </button>
           </div>
         </div>
-{successMessage && (
+{successMessage && premium && (
   <div className="bg-green-500 text-black px-5 py-4 rounded-2xl mb-6 font-bold">
     {successMessage}
   </div>
