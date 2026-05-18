@@ -404,7 +404,7 @@ const openCustomerPortal = async () => {
           </div>
 
           <p>
-            {completed} von {tasks.length} erledigt
+            Heute erledigt: {completed}/{tasks.length}
           </p>
         </div>
 
