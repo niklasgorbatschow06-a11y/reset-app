@@ -328,6 +328,7 @@ const openCustomerPortal = async () => {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
           <div>
             <p className="text-gray-500 mb-2">Willkommen zurück</p>
+<p className="text-gray-600 text-sm mb-2">{user.email}</p>
             <h1 className="text-4xl md:text-5xl font-bold">RESET Dashboard</h1>
             <p className="text-gray-400 mt-2">
               Fokussiere dich auf das, was heute zählt.
