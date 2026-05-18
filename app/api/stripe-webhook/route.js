@@ -9,6 +9,25 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 )
 
+async function setPremiumByCustomerId(customerId, isPremium) {
+  if (!customerId) return
+
+  const { data: userData } = await supabaseAdmin
+    .from('users')
+    .select('*')
+    .eq('stripe_customer_id', customerId)
+    .maybeSingle()
+
+  if (userData?.email) {
+    await supabaseAdmin
+      .from('users')
+      .update({
+        is_premium: isPremium,
+      })
+      .eq('email', userData.email)
+  }
+}
+
 export async function POST(request) {
   const body = await request.text()
   const signature = request.headers.get('stripe-signature')
@@ -52,21 +71,19 @@ export async function POST(request) {
 
     if (event.type === 'customer.subscription.deleted') {
       const subscription = event.data.object
-      const customerId = subscription.customer
+      await setPremiumByCustomerId(subscription.customer, false)
+    }
 
-      const { data: userData } = await supabaseAdmin
-        .from('users')
-        .select('*')
-        .eq('stripe_customer_id', customerId)
-        .maybeSingle()
+    if (event.type === 'customer.subscription.updated') {
+      const subscription = event.data.object
 
-      if (userData?.email) {
-        await supabaseAdmin
-          .from('users')
-          .update({
-            is_premium: false,
-          })
-          .eq('email', userData.email)
+      if (
+        subscription.cancel_at_period_end === true ||
+        subscription.status === 'canceled' ||
+        subscription.status === 'unpaid' ||
+        subscription.status === 'incomplete_expired'
+      ) {
+        await setPremiumByCustomerId(subscription.customer, false)
       }
     }
 
