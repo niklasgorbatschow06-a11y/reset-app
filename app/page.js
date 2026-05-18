@@ -63,6 +63,9 @@ export default function Home() {
     className="bg-white text-black px-6 py-4 rounded-2xl font-bold text-center"
   >
     Kostenlos starten
+    <p className="text-gray-500 text-sm mb-8">
+  Kostenlos starten. Premium optional für 9,99 € pro Monat.
+</p>
   </a>
 
   <a
