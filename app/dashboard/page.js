@@ -436,7 +436,15 @@ const openCustomerPortal = async () => {
             </div>
           </div>
         )}
-
+{premium && (
+  <div className="bg-gray-900 border border-gray-800 rounded-3xl p-6 mb-8">
+    <p className="text-gray-500 text-sm mb-2">RESET Premium</p>
+    <h2 className="text-2xl font-bold mb-2">Dein KI-Coach ist aktiv 🔥</h2>
+    <p className="text-gray-400">
+      Nutze den Coach, wenn du Klarheit, Motivation oder einen konkreten Plan brauchst.
+    </p>
+  </div>
+)}
         <div className="bg-gray-900 rounded-2xl p-6 mb-6">
           <h2 className="text-2xl font-bold mb-4">Eigene Aufgabe hinzufügen</h2>
 
