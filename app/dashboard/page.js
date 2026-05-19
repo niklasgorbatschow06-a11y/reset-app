@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@supabase/supabase-js'
@@ -598,6 +598,12 @@ const { error } = await supabase
 >
   Plan öffnen
 </button>
+<button
+  onClick={() => addWorkoutTasks('beginner')}
+  className="mt-3 w-full bg-gray-900 border border-gray-800 text-white py-3 rounded-xl font-bold"
+>
+  Als Aufgaben übernehmen
+</button>
       </div>
 
       <div className="bg-black border border-gray-800 rounded-2xl p-5">
@@ -615,6 +621,12 @@ const { error } = await supabase
   className="mt-4 w-full bg-white text-black py-3 rounded-xl font-bold"
 >
   Plan öffnen
+</button>
+<button
+  onClick={() => addWorkoutTasks('muscle')}
+  className="mt-3 w-full bg-gray-900 border border-gray-800 text-white py-3 rounded-xl font-bold"
+>
+  Als Aufgaben übernehmen
 </button>
       </div>
 
@@ -634,7 +646,7 @@ const { error } = await supabase
 >
   Plan öffnen
   <button
-  onClick={addWorkoutTasks}
+  onClick={() => addWorkoutTasks('home')}
   className="mt-3 w-full bg-gray-900 border border-gray-800 text-white py-3 rounded-xl font-bold"
 >
   Als Aufgaben übernehmen
