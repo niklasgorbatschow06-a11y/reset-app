@@ -26,8 +26,15 @@ export default function Dashboard() {
   const [coachReply, setCoachReply] = useState('')
   const [coachLoading, setCoachLoading] = useState(false)
   const [successMessage, setSuccessMessage] = useState('')
+  const [selectedWorkoutPlan, setSelectedWorkoutPlan] = useState('')
 
   const today = new Date().toISOString().split('T')[0]
+  const workoutPlanDetails = {}
+      'Anfänger Ganzkörper\n\nMontag:\n- Kniebeugen 3x8\n- Bankdrücken 3x8\n- Rudern 3x10\n- Plank 3x45 Sek.\n\nMittwoch:\n- Beinpresse 3x10\n- Schulterdrücken 3x10\n- Latzug 3x10\n- Bauch 3 Sätze\n\nFreitag:\n- Kreuzheben leicht 3x6\n- Schrägbankdrücken 3x8\n- Kabelrudern 3x10\n- Farmer Walk 3 Runden',
+
+    'Muskelaufbau 4 Tage\n\nTag 1 Oberkörper schwer:\n- Bankdrücken 4x6\n- Rudern 4x8\n- Schulterdrücken 3x8\n- Klimmzüge/Latzug 3x8\n\nTag 2 Unterkörper schwer:\n- Kniebeugen 4x6\n- Rumänisches Kreuzheben 3x8\n- Beinpresse 3x10\n- Waden 4x12\n\nTag 3 Oberkörper Volumen:\n- Schrägbank 3x10\n- Kabelrudern 3x12\n- Seitheben 4x15\n- Arme 3x12\n\nTag 4 Unterkörper Volumen:\n- Frontkniebeugen 3x10\n- Beinbeuger 3x12\n- Ausfallschritte 3x12\n- Bauch 3 Sätze',
+  
+    'Zuhause ohne Geräte\n\n3 Runden:\n- Liegestütze 10-20\n- Kniebeugen 20\n- Ausfallschritte 12 pro Bein\n- Mountain Climbers 30 Sek.\n- Plank 45 Sek.\n\nPause:\n60-90 Sekunden zwischen den Runden.\n\nSteigerung:\nJede Woche 1-2 Wiederholungen mehr oder eine zusätzliche Runde.',  
 
   useEffect(() => {
     init()
@@ -552,6 +559,12 @@ const openCustomerPortal = async () => {
           <li>Schulterdrücken: 3x10</li>
           <li>Plank: 3x45 Sek.</li>
         </ul>
+        <button
+  onClick={() => setSelectedWorkoutPlan(workoutPlanDetails.beginner)}
+  className="mt-4 w-full bg-white text-black py-3 rounded-xl font-bold"
+>
+  Plan öffnen
+</button>
       </div>
 
       <div className="bg-black border border-gray-800 rounded-2xl p-5">
@@ -564,6 +577,12 @@ const openCustomerPortal = async () => {
           <li>Tag 4: Unterkörper Volumen</li>
           <li>Progressiv steigern</li>
         </ul>
+        <button
+  onClick={() => setSelectedWorkoutPlan(workoutPlanDetails.muscle)}
+  className="mt-4 w-full bg-white text-black py-3 rounded-xl font-bold"
+>
+  Plan öffnen
+</button>
       </div>
 
       <div className="bg-black border border-gray-800 rounded-2xl p-5">
@@ -576,10 +595,20 @@ const openCustomerPortal = async () => {
           <li>Mountain Climbers: 3 Sätze</li>
           <li>Plank: 3 Sätze</li>
         </ul>
+        <button
+  onClick={() => setSelectedWorkoutPlan(workoutPlanDetails.home)}
+  className="mt-4 w-full bg-white text-black py-3 rounded-xl font-bold"
+>
+  Plan öffnen
+</button>
       </div>
     </div>
   )}
-
+{selectedWorkoutPlan && (
+  <div className="mt-6 bg-black border border-gray-800 rounded-2xl p-5 text-gray-300 whitespace-pre-wrap">
+    {selectedWorkoutPlan}
+  </div>
+)}
   <p className="text-gray-500 text-xs mt-6">
     Hinweis: Die Trainingspläne ersetzen keine medizinische Beratung. Trainiere nur, wenn du gesund bist.
   </p>
