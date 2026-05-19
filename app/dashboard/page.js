@@ -516,7 +516,74 @@ const openCustomerPortal = async () => {
     {message}
   </div>
 )}
+<div className="bg-gray-900 rounded-3xl border border-gray-800 p-6 mb-8">
+  <div className="flex items-center justify-between mb-4">
+    <h2 className="text-2xl font-bold">Trainingspläne</h2>
 
+    {!premium && (
+      <span className="text-sm bg-yellow-500 text-black px-3 py-1 rounded-full font-bold">
+        Premium gesperrt
+      </span>
+    )}
+  </div>
+
+  {!premium ? (
+    <div className="text-center py-8">
+      <p className="text-gray-400 mb-6">
+        Trainingspläne sind Teil von RESET Premium.
+      </p>
+
+      <button
+        onClick={startCheckout}
+        className="bg-white text-black px-6 py-3 rounded-2xl font-bold"
+      >
+        Premium freischalten
+      </button>
+    </div>
+  ) : (
+    <div className="grid md:grid-cols-3 gap-4">
+      <div className="bg-black border border-gray-800 rounded-2xl p-5">
+        <h3 className="text-xl font-bold mb-2">Anfänger Ganzkörper</h3>
+        <p className="text-gray-400 mb-4">3x pro Woche · Gym</p>
+        <ul className="text-gray-300 space-y-2 text-sm">
+          <li>Kniebeugen: 3x8</li>
+          <li>Bankdrücken: 3x8</li>
+          <li>Rudern: 3x10</li>
+          <li>Schulterdrücken: 3x10</li>
+          <li>Plank: 3x45 Sek.</li>
+        </ul>
+      </div>
+
+      <div className="bg-black border border-gray-800 rounded-2xl p-5">
+        <h3 className="text-xl font-bold mb-2">Muskelaufbau</h3>
+        <p className="text-gray-400 mb-4">4x pro Woche · Upper/Lower</p>
+        <ul className="text-gray-300 space-y-2 text-sm">
+          <li>Tag 1: Oberkörper schwer</li>
+          <li>Tag 2: Unterkörper schwer</li>
+          <li>Tag 3: Oberkörper Volumen</li>
+          <li>Tag 4: Unterkörper Volumen</li>
+          <li>Progressiv steigern</li>
+        </ul>
+      </div>
+
+      <div className="bg-black border border-gray-800 rounded-2xl p-5">
+        <h3 className="text-xl font-bold mb-2">Zuhause ohne Geräte</h3>
+        <p className="text-gray-400 mb-4">3x pro Woche · 25 Minuten</p>
+        <ul className="text-gray-300 space-y-2 text-sm">
+          <li>Liegestütze: 4 Sätze</li>
+          <li>Kniebeugen: 4 Sätze</li>
+          <li>Ausfallschritte: 3 Sätze</li>
+          <li>Mountain Climbers: 3 Sätze</li>
+          <li>Plank: 3 Sätze</li>
+        </ul>
+      </div>
+    </div>
+  )}
+
+  <p className="text-gray-500 text-xs mt-6">
+    Hinweis: Die Trainingspläne ersetzen keine medizinische Beratung. Trainiere nur, wenn du gesund bist.
+  </p>
+</div>
         <div className="bg-gray-900 rounded-3xl border border-gray-800 p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold">KI Coach</h2>
