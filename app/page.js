@@ -50,13 +50,13 @@ export default function Home() {
             RESET · Dein System für tägliche Disziplin
           </div>
 
-          <h1 className="text-4xl md:text-7xl font-bold mb-6 leading-tight">
-            Gewinne deinen Tag. Jeden Tag.
-          </h1>
+          <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6">
+  Baue Fokus, Disziplin und Momentum auf.
+</h1>
 
           <p className="text-gray-400 text-lg md:text-xl max-w-xl mb-8">
-            Baue Fokus, Disziplin und Momentum auf – mit täglichen Aufgaben, Streaks, Fortschritt und einem KI-Coach, der dich auf Kurs hält.
-          </p>
+  RESET hilft dir, deine wichtigsten Aufgaben zu erledigen, deinen Streak aufzubauen und mit einem KI-Coach dranzubleiben.
+</p>
 <div className="flex flex-col sm:flex-row gap-3 mb-8">
   <a
     href="#login"
