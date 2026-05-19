@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@supabase/supabase-js'
@@ -558,7 +558,12 @@ const { error } = await supabase
 )}
 <div className="bg-gray-900 rounded-3xl border border-gray-800 p-6 mb-8">
   <div className="flex items-center justify-between mb-4">
-    <h2 className="text-2xl font-bold">Trainingspläne</h2>
+    <div>
+  <h2 className="text-2xl font-bold">Premium Trainingspläne</h2>
+  <p className="text-gray-500 mt-1">
+    Wähle einen Plan und übernimm ihn direkt in deine Tagesaufgaben.
+  </p>
+</div>
 
     {!premium && (
       <span className="text-sm bg-yellow-500 text-black px-3 py-1 rounded-full font-bold">
