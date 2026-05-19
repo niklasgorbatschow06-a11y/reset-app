@@ -9,7 +9,7 @@ const supabase = createClient(
 )
 
 const defaultTasks = [
-  'Trainiere deinen Körper',
+  'Trainiere deinen KÃ¶rper',
   'Arbeite an deinem Ziel',
   'Lerne etwas Neues',
 ]
@@ -32,11 +32,11 @@ export default function Dashboard() {
 
   const workoutPlanDetails = {
     beginner:
-      'Anfänger Ganzkörper\n\nMontag:\n- Kniebeugen 3x8\n- Bankdrücken 3x8\n- Rudern 3x10\n- Plank 3x45 Sek.\n\nMittwoch:\n- Beinpresse 3x10\n- Schulterdrücken 3x10\n- Latzug 3x10\n- Bauch 3 Sätze\n\nFreitag:\n- Kreuzheben leicht 3x6\n- Schrägbankdrücken 3x8\n- Kabelrudern 3x10\n- Farmer Walk 3 Runden',
+      'AnfÃ¤nger GanzkÃ¶rper\n\nMontag:\n- Kniebeugen 3x8\n- BankdrÃ¼cken 3x8\n- Rudern 3x10\n- Plank 3x45 Sek.\n\nMittwoch:\n- Beinpresse 3x10\n- SchulterdrÃ¼cken 3x10\n- Latzug 3x10\n- Bauch 3 SÃ¤tze\n\nFreitag:\n- Kreuzheben leicht 3x6\n- SchrÃ¤gbankdrÃ¼cken 3x8\n- Kabelrudern 3x10\n- Farmer Walk 3 Runden',
     muscle:
-      'Muskelaufbau 4 Tage\n\nTag 1 Oberkörper schwer:\n- Bankdrücken 4x6\n- Rudern 4x8\n- Schulterdrücken 3x8\n- Klimmzüge/Latzug 3x8\n\nTag 2 Unterkörper schwer:\n- Kniebeugen 4x6\n- Rumänisches Kreuzheben 3x8\n- Beinpresse 3x10\n- Waden 4x12\n\nTag 3 Oberkörper Volumen:\n- Schrägbank 3x10\n- Kabelrudern 3x12\n- Seitheben 4x15\n- Arme 3x12\n\nTag 4 Unterkörper Volumen:\n- Frontkniebeugen 3x10\n- Beinbeuger 3x12\n- Ausfallschritte 3x12\n- Bauch 3 Sätze',
+      'Muskelaufbau 4 Tage\n\nTag 1 OberkÃ¶rper schwer:\n- BankdrÃ¼cken 4x6\n- Rudern 4x8\n- SchulterdrÃ¼cken 3x8\n- KlimmzÃ¼ge/Latzug 3x8\n\nTag 2 UnterkÃ¶rper schwer:\n- Kniebeugen 4x6\n- RumÃ¤nisches Kreuzheben 3x8\n- Beinpresse 3x10\n- Waden 4x12\n\nTag 3 OberkÃ¶rper Volumen:\n- SchrÃ¤gbank 3x10\n- Kabelrudern 3x12\n- Seitheben 4x15\n- Arme 3x12\n\nTag 4 UnterkÃ¶rper Volumen:\n- Frontkniebeugen 3x10\n- Beinbeuger 3x12\n- Ausfallschritte 3x12\n- Bauch 3 SÃ¤tze',
     home:
-      'Zuhause ohne Geräte\n\n3 Runden:\n- Liegestütze 10-20\n- Kniebeugen 20\n- Ausfallschritte 12 pro Bein\n- Mountain Climbers 30 Sek.\n- Plank 45 Sek.\n\nPause:\n60-90 Sekunden zwischen den Runden.\n\nSteigerung:\nJede Woche 1-2 Wiederholungen mehr oder eine zusätzliche Runde.',
+      'Zuhause ohne GerÃ¤te\n\n3 Runden:\n- LiegestÃ¼tze 10-20\n- Kniebeugen 20\n- Ausfallschritte 12 pro Bein\n- Mountain Climbers 30 Sek.\n- Plank 45 Sek.\n\nPause:\n60-90 Sekunden zwischen den Runden.\n\nSteigerung:\nJede Woche 1-2 Wiederholungen mehr oder eine zusÃ¤tzliche Runde.',
   }
 
   useEffect(() => {
@@ -172,7 +172,7 @@ setPremium(userData?.is_premium === true)
   }
 
   const deleteTask = async (taskId) => {
-    const confirmed = confirm('Aufgabe wirklich löschen?')
+    const confirmed = confirm('Aufgabe wirklich lÃ¶schen?')
 
 if (!confirmed) return
     const { error } = await supabase
@@ -181,7 +181,7 @@ if (!confirmed) return
       .eq('id', taskId)
 
     if (error) {
-      alert('Löschen Fehler: ' + error.message)
+      alert('LÃ¶schen Fehler: ' + error.message)
       return
     }
 
@@ -252,7 +252,7 @@ if (!confirmed) return
 
   const askCoach = async () => {
     if (!premium) {
-      alert('KI Coach ist nur für Premium verfügbar.')
+      alert('KI Coach ist nur fÃ¼r Premium verfÃ¼gbar.')
       return
     }
 
@@ -336,7 +336,7 @@ const openCustomerPortal = async () => {
   }
 const addWorkoutTasks = async () => {
   const workoutTasks = [
-    'Liegestütze erledigen',
+    'LiegestÃ¼tze erledigen',
     'Kniebeugen erledigen',
     'Ausfallschritte erledigen',
     'Plank erledigen',
@@ -357,7 +357,7 @@ const addWorkoutTasks = async () => {
   .in('title', workoutTasks)
 
 if (existingTasks && existingTasks.length > 0) {
-  setMessage('Dieser Trainingsplan wurde heute schon hinzugefügt.')
+  setMessage('Dieser Trainingsplan wurde heute schon hinzugefÃ¼gt.')
   return
 }
 
@@ -370,11 +370,11 @@ const { error } = await supabase
       <div className="max-w-5xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
           <div>
-            <p className="text-gray-500 mb-2">Willkommen zurück</p>
+            <p className="text-gray-500 mb-2">Willkommen zurÃ¼ck</p>
 <p className="text-gray-600 text-sm mb-2">{user.email}</p>
             <h1 className="text-4xl md:text-5xl font-bold">RESET Dashboard</h1>
             <p className="text-gray-400 mt-2">
-              Fokussiere dich auf das, was heute zählt.
+              Fokussiere dich auf das, was heute zÃ¤hlt.
             </p>
           </div>
 
@@ -382,7 +382,7 @@ const { error } = await supabase
             <div className="bg-gray-900 border border-gray-800 rounded-2xl px-5 py-4 flex-1">
               <p className="text-gray-500 text-sm">Status</p>
               <p className="font-bold">
-                {premium ? 'Premium aktiv 🔥' : 'Free Plan'}
+                {premium ? 'Premium aktiv ðŸ”¥' : 'Free Plan'}
               </p>
               <p className="text-gray-500 text-xs mt-1">
                 {premium ? 'KI-Coach freigeschaltet' : 'Basis-Funktionen aktiv'}
@@ -434,7 +434,7 @@ const { error } = await supabase
 </div>
         <div className="bg-gray-900 rounded-2xl p-6 mb-6">
           <p className="text-gray-400 mb-2">Dein Streak</p>
-          <h2 className="text-5xl font-bold">🔥 {streak} Tage</h2>
+          <h2 className="text-5xl font-bold">ðŸ”¥ {streak} Tage</h2>
         </div>
 
         <div className="bg-gray-900 rounded-2xl p-6 mb-6">
@@ -461,13 +461,13 @@ const { error } = await supabase
                   Schalte deinen KI-Coach frei
                 </h2>
                 <p className="text-gray-400 max-w-xl">
-                  Erhalte persönliche Motivation, klare nächste Schritte und direkte Antworten, wenn du festhängst.
+                  Erhalte persÃ¶nliche Motivation, klare nÃ¤chste Schritte und direkte Antworten, wenn du festhÃ¤ngst.
                 </p>
               </div>
 
               <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5 min-w-64">
                 <p className="text-gray-400 mb-1">Nur</p>
-                <p className="text-4xl font-bold mb-4">9,99 €</p>
+                <p className="text-4xl font-bold mb-4">9,99 â‚¬</p>
                 <p className="text-gray-500 mb-4">pro Monat</p>
 
                 <button
@@ -483,14 +483,14 @@ const { error } = await supabase
 {premium && (
   <div className="bg-gray-900 border border-gray-800 rounded-3xl p-6 mb-8">
     <p className="text-gray-500 text-sm mb-2">RESET Premium</p>
-    <h2 className="text-2xl font-bold mb-2">Dein KI-Coach ist aktiv 🔥</h2>
+    <h2 className="text-2xl font-bold mb-2">Dein KI-Coach ist aktiv ðŸ”¥</h2>
     <p className="text-gray-400">
       Nutze den Coach, wenn du Klarheit, Motivation oder einen konkreten Plan brauchst.
     </p>
   </div>
 )}
         <div className="bg-gray-900 rounded-2xl p-6 mb-6">
-          <h2 className="text-2xl font-bold mb-4">Eigene Aufgabe hinzufügen</h2>
+          <h2 className="text-2xl font-bold mb-4">Eigene Aufgabe hinzufÃ¼gen</h2>
 
           <div className="flex flex-col sm:flex-row gap-3">
             <input
@@ -504,7 +504,7 @@ const { error } = await supabase
               onClick={addTask}
               className="bg-white text-black px-6 py-3 rounded-xl font-bold"
             >
-              Hinzufügen
+              HinzufÃ¼gen
             </button>
           </div>
         </div>
@@ -512,7 +512,7 @@ const { error } = await supabase
         <div className="space-y-4 mb-6">
   {tasks.length === 0 && (
     <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 text-center text-gray-400">
-      Noch keine Aufgaben. Füge deine erste Aufgabe hinzu.
+      Noch keine Aufgaben. FÃ¼ge deine erste Aufgabe hinzu.
     </div>
   )}
 
@@ -531,14 +531,14 @@ const { error } = await supabase
                   {task.title}
                 </span>
 
-                <span>{task.completed ? '✅' : '⬜'}</span>
+                <span>{task.completed ? 'âœ…' : 'â¬œ'}</span>
               </button>
 
               <button
                 onClick={() => deleteTask(task.id)}
                 className="text-gray-500 hover:text-red-400 font-bold"
               >
-                Löschen
+                LÃ¶schen
               </button>
             </div>
           ))}
@@ -548,7 +548,7 @@ const { error } = await supabase
           onClick={completeDay}
           className="w-full bg-white text-black py-4 rounded-2xl font-bold mb-4"
         >
-          Tag abschließen
+          Tag abschlieÃŸen
         </button>
 
         {message && (
@@ -559,9 +559,9 @@ const { error } = await supabase
 <div className="bg-gray-900 rounded-3xl border border-gray-800 p-6 mb-8">
   <div className="flex items-center justify-between mb-4">
     <div>
-  <h2 className="text-2xl font-bold">Premium Trainingspläne</h2>
+  <h2 className="text-2xl font-bold">Premium TrainingsplÃ¤ne</h2>
   <p className="text-gray-500 mt-1">
-    Wähle einen Plan und übernimm ihn direkt in deine Tagesaufgaben.
+    WÃ¤hle einen Plan und Ã¼bernimm ihn direkt in deine Tagesaufgaben.
   </p>
 </div>
 
@@ -575,7 +575,7 @@ const { error } = await supabase
   {!premium ? (
     <div className="text-center py-8">
       <p className="text-gray-400 mb-6">
-        Trainingspläne sind Teil von RESET Premium.
+        TrainingsplÃ¤ne sind Teil von RESET Premium.
       </p>
 
       <button
@@ -588,74 +588,74 @@ const { error } = await supabase
   ) : (
     <div className="grid md:grid-cols-3 gap-4">
       <div className="bg-black border border-gray-800 rounded-2xl p-5">
-        <h3 className="text-xl font-bold mb-2">Anfänger Ganzkörper</h3>
-        <p className="text-gray-400 mb-4">3x pro Woche · Gym</p>
+        <h3 className="text-xl font-bold mb-2">AnfÃ¤nger GanzkÃ¶rper</h3>
+        <p className="text-gray-400 mb-4">3x pro Woche Â· Gym</p>
         <ul className="text-gray-300 space-y-2 text-sm">
           <li>Kniebeugen: 3x8</li>
-          <li>Bankdrücken: 3x8</li>
+          <li>BankdrÃ¼cken: 3x8</li>
           <li>Rudern: 3x10</li>
-          <li>Schulterdrücken: 3x10</li>
+          <li>SchulterdrÃ¼cken: 3x10</li>
           <li>Plank: 3x45 Sek.</li>
         </ul>
         <button
   onClick={() => setSelectedWorkoutPlan(workoutPlanDetails.beginner)}
   className="mt-4 w-full bg-white text-black py-3 rounded-xl font-bold"
 >
-  Plan öffnen
+  Plan Ã¶ffnen
 </button>
 <button
   onClick={() => addWorkoutTasks('beginner')}
   className="mt-3 w-full bg-gray-900 border border-gray-800 text-white py-3 rounded-xl font-bold"
 >
-  Als Aufgaben übernehmen
+  Als Aufgaben Ã¼bernehmen
 </button>
       </div>
 
       <div className="bg-black border border-gray-800 rounded-2xl p-5">
         <h3 className="text-xl font-bold mb-2">Muskelaufbau</h3>
-        <p className="text-gray-400 mb-4">4x pro Woche · Upper/Lower</p>
+        <p className="text-gray-400 mb-4">4x pro Woche Â· Upper/Lower</p>
         <ul className="text-gray-300 space-y-2 text-sm">
-          <li>Tag 1: Oberkörper schwer</li>
-          <li>Tag 2: Unterkörper schwer</li>
-          <li>Tag 3: Oberkörper Volumen</li>
-          <li>Tag 4: Unterkörper Volumen</li>
+          <li>Tag 1: OberkÃ¶rper schwer</li>
+          <li>Tag 2: UnterkÃ¶rper schwer</li>
+          <li>Tag 3: OberkÃ¶rper Volumen</li>
+          <li>Tag 4: UnterkÃ¶rper Volumen</li>
           <li>Progressiv steigern</li>
         </ul>
         <button
   onClick={() => setSelectedWorkoutPlan(workoutPlanDetails.muscle)}
   className="mt-4 w-full bg-white text-black py-3 rounded-xl font-bold"
 >
-  Plan öffnen
+  Plan Ã¶ffnen
 </button>
 <button
   onClick={() => addWorkoutTasks('muscle')}
   className="mt-3 w-full bg-gray-900 border border-gray-800 text-white py-3 rounded-xl font-bold"
 >
-  Als Aufgaben übernehmen
+  Als Aufgaben Ã¼bernehmen
 </button>
       </div>
 
       <div className="bg-black border border-gray-800 rounded-2xl p-5">
-        <h3 className="text-xl font-bold mb-2">Zuhause ohne Geräte</h3>
-        <p className="text-gray-400 mb-4">3x pro Woche · 25 Minuten</p>
+        <h3 className="text-xl font-bold mb-2">Zuhause ohne GerÃ¤te</h3>
+        <p className="text-gray-400 mb-4">3x pro Woche Â· 25 Minuten</p>
         <ul className="text-gray-300 space-y-2 text-sm">
-          <li>Liegestütze: 4 Sätze</li>
-          <li>Kniebeugen: 4 Sätze</li>
-          <li>Ausfallschritte: 3 Sätze</li>
-          <li>Mountain Climbers: 3 Sätze</li>
-          <li>Plank: 3 Sätze</li>
+          <li>LiegestÃ¼tze: 4 SÃ¤tze</li>
+          <li>Kniebeugen: 4 SÃ¤tze</li>
+          <li>Ausfallschritte: 3 SÃ¤tze</li>
+          <li>Mountain Climbers: 3 SÃ¤tze</li>
+          <li>Plank: 3 SÃ¤tze</li>
         </ul>
         <button
   onClick={() => setSelectedWorkoutPlan(workoutPlanDetails.home)}
   className="mt-4 w-full bg-white text-black py-3 rounded-xl font-bold"
 >
-  Plan öffnen
+  Plan Ã¶ffnen
   </button>
   <button
   onClick={() => addWorkoutTasks('home')}
   className="mt-3 w-full bg-gray-900 border border-gray-800 text-white py-3 rounded-xl font-bold"
 >
-  Als Aufgaben übernehmen
+  Als Aufgaben Ã¼bernehmen
 </button>
       </div>
     </div>
@@ -670,12 +670,12 @@ const { error } = await supabase
       onClick={() => setSelectedWorkoutPlan('')}
       className="mt-5 bg-gray-900 border border-gray-800 text-gray-300 hover:text-white px-5 py-3 rounded-xl font-bold"
     >
-      Plan schließen
+      Plan schlieÃŸen
     </button>
   </div>
 )}
   <p className="text-gray-500 text-xs mt-6">
-    Hinweis: Die Trainingspläne ersetzen keine medizinische Beratung. Trainiere nur, wenn du gesund bist.
+    Hinweis: Die TrainingsplÃ¤ne ersetzen keine medizinische Beratung. Trainiere nur, wenn du gesund bist.
   </p>
 </div>
         <div className="bg-gray-900 rounded-3xl border border-gray-800 p-6">
@@ -698,7 +698,7 @@ const { error } = await supabase
   </p>
 
   <p className="text-gray-500 mb-6">
-    Er hilft dir bei Motivation, Fokus, Tagesplanung und klaren nächsten Schritten.
+    Er hilft dir bei Motivation, Fokus, Tagesplanung und klaren nÃ¤chsten Schritten.
   </p>
 
   <button
@@ -721,7 +721,7 @@ const { error } = await supabase
             <><div className="grid sm:grid-cols-2 gap-3 mb-4">
   {[
     'Ich habe keine Motivation',
-    'Ich weiß nicht, womit ich anfangen soll',
+    'Ich weiÃŸ nicht, womit ich anfangen soll',
     'Ich habe heute versagt',
     'Gib mir einen 10-Minuten-Plan',
   ].map((prompt) => (
