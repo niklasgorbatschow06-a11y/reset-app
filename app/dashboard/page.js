@@ -334,7 +334,33 @@ const openCustomerPortal = async () => {
       </main>
     )
   }
+const addWorkoutTasks = async () => {
+  const workoutTasks = [
+    'Liegestütze erledigen',
+    'Kniebeugen erledigen',
+    'Ausfallschritte erledigen',
+    'Plank erledigen',
+  ]
 
+  const tasksToCreate = workoutTasks.map((title) => ({
+    email: user.email,
+    title,
+    completed: false,
+    date: today,
+  }))
+
+  const { error } = await supabase
+    .from('daily_tasks')
+    .insert(tasksToCreate)
+
+  if (error) {
+    alert(error.message)
+    return
+  }
+
+  await loadTasks(user.email)
+  setMessage('Trainingsplan wurde zu deinen Aufgaben hinzugefügt.')
+}
   return (
     <main className="min-h-screen bg-black text-white px-6 py-8">
       <div className="max-w-5xl mx-auto">
@@ -603,6 +629,12 @@ const openCustomerPortal = async () => {
   className="mt-4 w-full bg-white text-black py-3 rounded-xl font-bold"
 >
   Plan öffnen
+  <button
+  onClick={addWorkoutTasks}
+  className="mt-3 w-full bg-gray-900 border border-gray-800 text-white py-3 rounded-xl font-bold"
+>
+  Als Aufgaben übernehmen
+</button>
 </button>
       </div>
     </div>
