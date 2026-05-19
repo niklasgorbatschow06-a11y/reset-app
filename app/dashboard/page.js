@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@supabase/supabase-js'
@@ -608,8 +608,17 @@ const openCustomerPortal = async () => {
     </div>
   )}
 {selectedWorkoutPlan && (
-  <div className="mt-6 bg-black border border-gray-800 rounded-2xl p-5 text-gray-300 whitespace-pre-wrap">
-    {selectedWorkoutPlan}
+  <div className="mt-6 bg-black border border-gray-800 rounded-2xl p-5">
+    <div className="text-gray-300 whitespace-pre-wrap">
+      {selectedWorkoutPlan}
+    </div>
+
+    <button
+      onClick={() => setSelectedWorkoutPlan('')}
+      className="mt-5 bg-gray-900 border border-gray-800 text-gray-300 hover:text-white px-5 py-3 rounded-xl font-bold"
+    >
+      Plan schließen
+    </button>
   </div>
 )}
   <p className="text-gray-500 text-xs mt-6">
