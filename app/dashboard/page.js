@@ -349,17 +349,21 @@ const addWorkoutTasks = async () => {
     date: today,
   }))
 
-  const { error } = await supabase
-    .from('daily_tasks')
-    .insert(tasksToCreate)
+  const { data: existingTasks } = await supabase
+  .from('daily_tasks')
+  .select('*')
+  .eq('email', user.email)
+  .eq('date', today)
+  .in('title', workoutTasks)
 
-  if (error) {
-    alert(error.message)
-    return
-  }
+if (existingTasks && existingTasks.length > 0) {
+  setMessage('Dieser Trainingsplan wurde heute schon hinzugefügt.')
+  return
+}
 
-  await loadTasks(user.email)
-  setMessage('Trainingsplan wurde zu deinen Aufgaben hinzugefügt.')
+const { error } = await supabase
+  .from('daily_tasks')
+  .insert(tasksToCreate)
 }
   return (
     <main className="min-h-screen bg-black text-white px-6 py-8">
