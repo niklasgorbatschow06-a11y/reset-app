@@ -599,6 +599,7 @@ const { error } = await supabase
     </div>
   ))}
 </div>
+  )}
 {selectedWorkoutPlan && (
   <div className="mt-6 bg-black border border-gray-800 rounded-2xl p-5">
     <div className="text-gray-300 whitespace-pre-wrap">
