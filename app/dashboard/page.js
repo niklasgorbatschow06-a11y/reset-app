@@ -638,7 +638,7 @@ const { error } = await supabase
   className="mt-4 w-full bg-white text-black py-3 rounded-xl font-bold"
 >
   Plan öffnen
-  </button>button
+  </button>
   <button
   onClick={() => addWorkoutTasks('home')}
   className="mt-3 w-full bg-gray-900 border border-gray-800 text-white py-3 rounded-xl font-bold"
