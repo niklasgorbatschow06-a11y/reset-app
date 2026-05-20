@@ -110,7 +110,7 @@ Legs:
 
   fatloss: {
     title: 'Fettverlust',
-    category: 'gym or home',
+    category: 'Fettverlust',
     subtitle: '3x pro Woche · Kraft + Kondition',
     tasks: [
       'Krafttraining erledigen',
@@ -138,7 +138,7 @@ Fettverlust kommt vor allem durch Ernährung und Kaloriendefizit.`,
 
   emergency: {
     title: '10-Minuten-Notfallplan',
-    category: 'gym or home',
+    category: 'Kurz',
     subtitle: 'Wenn du wenig Zeit hast',
     tasks: [
       '10 Minuten Training erledigen',
