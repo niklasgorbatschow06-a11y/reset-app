@@ -55,7 +55,7 @@ export default function Home() {
 </h1>
 
           <p className="text-gray-400 text-lg md:text-xl max-w-xl mb-8">
-  RESET hilft dir, deine wichtigsten Aufgaben zu erledigen, deinen Streak aufzubauen und mit einem KI-Coach dranzubleiben.
+  RESET hilft dir, deine wichtigsten Aufgaben zu erledigen, deinen Streak aufzubauen, Trainingspläne zu nutzen und mit einem KI-Coach dranzubleiben.
 </p>
 <div className="flex flex-col sm:flex-row gap-3 mb-8">
   <a
@@ -93,6 +93,14 @@ export default function Home() {
               <p className="font-bold mt-2">KI-Coach</p>
               <p className="text-gray-500 text-sm">Premium.</p>
             </div>
+
+            <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6">
+  <h3 className="text-xl font-bold mb-2">Trainingspläne</h3>
+  <p className="text-gray-400">
+    Nutze fertige Pläne für Gym, Zuhause, Muskelaufbau und schnelle Workouts.
+  </p>
+</div>
+
           </div>
         </section>
           <div className="mt-8 border border-gray-800 rounded-3xl p-5 bg-gray-950 max-w-xl">
