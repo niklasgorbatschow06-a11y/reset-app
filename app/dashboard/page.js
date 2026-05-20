@@ -27,7 +27,7 @@ export default function Dashboard() {
   const [coachReply, setCoachReply] = useState('')
   const [coachLoading, setCoachLoading] = useState(false)
   const [successMessage, setSuccessMessage] = useState('')
-  const [selectedWorkoutPlan, setSelectedWorkoutPlan] = useState('')
+  const [selectedWorkoutPlan, setSelectedWorkoutPlan] = useState(null)
 
   const today = new Date().toISOString().split('T')[0]
 
@@ -584,7 +584,7 @@ const { error } = await supabase
       <p className="text-gray-400 mb-4">{plan.subtitle}</p>
 
       <button
-        onClick={() => setSelectedWorkoutPlan(plan.details)}
+        onClick={() => setSelectedWorkoutPlan(plan)}
         className="mt-4 w-full bg-white text-black py-3 rounded-xl font-bold"
       >
         Plan öffnen
@@ -603,10 +603,10 @@ const { error } = await supabase
 {selectedWorkoutPlan && (
   <div className="mt-6 bg-black border border-gray-800 rounded-2xl p-5">
     <div className="flex items-center justify-between gap-4 mb-4">
-      <h3 className="text-xl font-bold">Trainingsplan Details</h3>
+      <h3 className="text-xl font-bold">{selectedWorkoutPlan.title}</h3>
 
       <button
-        onClick={() => setSelectedWorkoutPlan('')}
+        onClick={() => setSelectedWorkoutPlan(null)}
         className="text-gray-500 hover:text-white font-bold"
       >
         Schließen
@@ -614,7 +614,7 @@ const { error } = await supabase
     </div>
 
     <div className="text-gray-300 whitespace-pre-wrap">
-      {selectedWorkoutPlan}
+      {selectedWorkoutPlan.details}
     </div>
   </div>
 )}
