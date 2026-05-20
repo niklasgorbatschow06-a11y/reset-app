@@ -575,134 +575,29 @@ const { error } = await supabase
     </div>
   ) : (
     <div className="grid md:grid-cols-3 gap-4">
-      <div className="bg-black border border-gray-800 rounded-2xl p-5">
-        <h3 className="text-xl font-bold mb-2">Anfänger Ganzkörper</h3>
-        <p className="text-gray-400 mb-4">3x pro Woche · Gym</p>
-        <ul className="text-gray-300 space-y-2 text-sm">
-          <li>Kniebeugen: 3x8</li>
-          <li>Bankdrücken: 3x8</li>
-          <li>Rudern: 3x10</li>
-          <li>Schulterdrücken: 3x10</li>
-          <li>Plank: 3x45 Sek.</li>
-        </ul>
-        <button
-  onClick={() => setSelectedWorkoutPlan(workoutPlanDetails.beginner.details)}
-  className="mt-4 w-full bg-white text-black py-3 rounded-xl font-bold"
->
-  Plan öffnen
-</button>
-<button
-  onClick={() => addWorkoutTasks('beginner')}
-  className="mt-3 w-full bg-gray-900 border border-gray-800 text-white py-3 rounded-xl font-bold"
->
-  Als Aufgaben übernehmen
-</button>
-      </div>
+  {Object.entries(workoutPlans).map(([key, plan]) => (
+    <div
+      key={key}
+      className="bg-black border border-gray-800 rounded-2xl p-5"
+    >
+      <h3 className="text-xl font-bold mb-2">{plan.title}</h3>
+      <p className="text-gray-400 mb-4">{plan.subtitle}</p>
 
-      <div className="bg-black border border-gray-800 rounded-2xl p-5">
-        <h3 className="text-xl font-bold mb-2">Muskelaufbau</h3>
-        <p className="text-gray-400 mb-4">4x pro Woche · Upper/Lower</p>
-        <ul className="text-gray-300 space-y-2 text-sm">
-          <li>Tag 1: Oberkörper schwer</li>
-          <li>Tag 2: Unterkörper schwer</li>
-          <li>Tag 3: Oberkörper Volumen</li>
-          <li>Tag 4: Unterkörper Volumen</li>
-          <li>Progressiv steigern</li>
-        </ul>
-        <button
-  onClick={() => setSelectedWorkoutPlan(workoutPlanDetails.muscle.details)}
-  className="mt-4 w-full bg-white text-black py-3 rounded-xl font-bold"
->
-  Plan öffnen
-</button>
-<button
-  onClick={() => addWorkoutTasks('muscle')}
-  className="mt-3 w-full bg-gray-900 border border-gray-800 text-white py-3 rounded-xl font-bold"
->
-  Als Aufgaben übernehmen
-</button>
-      </div>
+      <button
+        onClick={() => setSelectedWorkoutPlan(plan.details)}
+        className="mt-4 w-full bg-white text-black py-3 rounded-xl font-bold"
+      >
+        Plan öffnen
+      </button>
 
-      <div className="bg-black border border-gray-800 rounded-2xl p-5">
-        <h3 className="text-xl font-bold mb-2">Zuhause ohne Geräte</h3>
-        <p className="text-gray-400 mb-4">3x pro Woche · 25 Minuten</p>
-        <ul className="text-gray-300 space-y-2 text-sm">
-          <li>Liegestütze: 4 Sätze</li>
-          <li>Kniebeugen: 4 Sätze</li>
-          <li>Ausfallschritte: 3 Sätze</li>
-          <li>Mountain Climbers: 3 Sätze</li>
-          <li>Plank: 3 Sätze</li>
-        </ul>
-        <button
-  onClick={() => setSelectedWorkoutPlan(workoutPlanDetails.home.details)}
-  className="mt-4 w-full bg-white text-black py-3 rounded-xl font-bold"
->
-  Plan öffnen
-  </button>
-  <button
-  onClick={() => addWorkoutTasks('home')}
-  className="mt-3 w-full bg-gray-900 border border-gray-800 text-white py-3 rounded-xl font-bold"
->
-  Als Aufgaben übernehmen
-</button>
-      </div>
+      <button
+        onClick={() => addWorkoutTasks(key)}
+        className="mt-3 w-full bg-gray-900 border border-gray-800 text-white py-3 rounded-xl font-bold"
+      >
+        Als Aufgaben übernehmen
+      </button>
     </div>
-  )}
-  <div className="bg-black border border-gray-800 rounded-2xl p-5">
-  <h3 className="text-xl font-bold mb-2">{workoutPlans.ppl.title}</h3>
-  <p className="text-gray-400 mb-4">{workoutPlans.ppl.subtitle}</p>
-
-  <button
-    onClick={() => setSelectedWorkoutPlan(workoutPlans.ppl.details)}
-    className="mt-4 w-full bg-white text-black py-3 rounded-xl font-bold"
-  >
-    Plan öffnen
-  </button>
-
-  <button
-    onClick={() => addWorkoutTasks('ppl')}
-    className="mt-3 w-full bg-gray-900 border border-gray-800 text-white py-3 rounded-xl font-bold"
-  >
-    Als Aufgaben übernehmen
-  </button>
-</div>
-
-<div className="bg-black border border-gray-800 rounded-2xl p-5">
-  <h3 className="text-xl font-bold mb-2">{workoutPlans.fatloss.title}</h3>
-  <p className="text-gray-400 mb-4">{workoutPlans.fatloss.subtitle}</p>
-
-  <button
-    onClick={() => setSelectedWorkoutPlan(workoutPlans.fatloss.details)}
-    className="mt-4 w-full bg-white text-black py-3 rounded-xl font-bold"
-  >
-    Plan öffnen
-  </button>
-
-  <button
-    onClick={() => addWorkoutTasks('fatloss')}
-    className="mt-3 w-full bg-gray-900 border border-gray-800 text-white py-3 rounded-xl font-bold"
-  >
-    Als Aufgaben übernehmen
-  </button>
-</div>
-
-<div className="bg-black border border-gray-800 rounded-2xl p-5">
-  <h3 className="text-xl font-bold mb-2">{workoutPlans.emergency.title}</h3>
-  <p className="text-gray-400 mb-4">{workoutPlans.emergency.subtitle}</p>
-
-  <button
-    onClick={() => setSelectedWorkoutPlan(workoutPlans.emergency.details)}
-    className="mt-4 w-full bg-white text-black py-3 rounded-xl font-bold"
-  >
-    Plan öffnen
-  </button>
-
-  <button
-    onClick={() => addWorkoutTasks('emergency')}
-    className="mt-3 w-full bg-gray-900 border border-gray-800 text-white py-3 rounded-xl font-bold"
-  >
-    Als Aufgaben übernehmen
-  </button>
+  ))}
 </div>
 {selectedWorkoutPlan && (
   <div className="mt-6 bg-black border border-gray-800 rounded-2xl p-5">
