@@ -100,7 +100,37 @@ export default function Home() {
     Nutze fertige Pläne für Gym, Zuhause, Muskelaufbau und schnelle Workouts.
   </p>
 </div>
+<section className="max-w-5xl mx-auto px-6 py-20">
+  <div className="bg-gradient-to-br from-gray-900 to-black border border-gray-800 rounded-3xl p-8 md:p-10">
+    <p className="text-yellow-400 font-bold mb-3">RESET Premium</p>
 
+    <h2 className="text-3xl md:text-4xl font-bold mb-4">
+      Schalte deinen KI-Coach und Trainingspläne frei.
+    </h2>
+
+    <p className="text-gray-400 max-w-2xl mb-6">
+      Premium gibt dir mehr Struktur, Motivation und konkrete Pläne für deinen Alltag.
+    </p>
+
+    <ul className="text-gray-300 space-y-3 mb-8">
+      <li>✓ KI-Coach für Motivation und klare nächste Schritte</li>
+      <li>✓ Premium-Trainingspläne für Gym und Zuhause</li>
+      <li>✓ Trainingspläne als Tagesaufgaben übernehmen</li>
+      <li>✓ Mehr Fokus, Struktur und Momentum</li>
+    </ul>
+
+    <a
+      href="/login"
+      className="inline-block bg-white text-black px-8 py-4 rounded-2xl font-bold"
+    >
+      Kostenlos starten
+    </a>
+
+    <p className="text-gray-500 text-sm mt-4">
+      Premium optional für 9,99 € pro Monat.
+    </p>
+  </div>
+</section>
           </div>
         </section>
           <div className="mt-8 border border-gray-800 rounded-3xl p-5 bg-gray-950 max-w-xl">
