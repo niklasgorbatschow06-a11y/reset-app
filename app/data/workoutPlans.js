@@ -1,6 +1,7 @@
 export const workoutPlans = {
   beginner: {
     title: 'Anfänger Ganzkörper',
+    category: 'gym',
     subtitle: '3x pro Woche · Gym',
     tasks: [
       'Kniebeugen erledigen',
@@ -31,6 +32,7 @@ Freitag:
 
   muscle: {
     title: 'Muskelaufbau',
+    category: 'gym',
     subtitle: '4x pro Woche · Upper/Lower',
     tasks: [
       'Oberkörper Training erledigen',
@@ -55,6 +57,7 @@ Tag 2 Unterkörper schwer:
 
   home: {
     title: 'Zuhause ohne Geräte',
+    category: 'home',
     subtitle: '3x pro Woche · 25 Minuten',
     tasks: [
       'Liegestütze erledigen',
@@ -74,6 +77,7 @@ Tag 2 Unterkörper schwer:
 
   ppl: {
     title: 'Push Pull Legs',
+    category: 'gym',
     subtitle: '6x pro Woche · Gym',
     tasks: [
       'Push Training erledigen',
@@ -106,6 +110,7 @@ Legs:
 
   fatloss: {
     title: 'Fettverlust',
+    category: 'gym or home',
     subtitle: '3x pro Woche · Kraft + Kondition',
     tasks: [
       'Krafttraining erledigen',
@@ -133,6 +138,7 @@ Fettverlust kommt vor allem durch Ernährung und Kaloriendefizit.`,
 
   emergency: {
     title: '10-Minuten-Notfallplan',
+    category: 'gym or home',
     subtitle: 'Wenn du wenig Zeit hast',
     tasks: [
       '10 Minuten Training erledigen',
