@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@supabase/supabase-js'
@@ -28,7 +28,6 @@ export default function Dashboard() {
   const [coachLoading, setCoachLoading] = useState(false)
   const [successMessage, setSuccessMessage] = useState('')
   const [selectedWorkoutPlan, setSelectedWorkoutPlan] = useState(null)
-  const [workoutFilter, setWorkoutFilter] = useState('all')
 
   const today = new Date().toISOString().split('T')[0]
 
@@ -313,9 +312,6 @@ const openCustomerPortal = async () => {
   }
 
   if (!user) {
-    const filteredWorkoutPlans = Object.entries(workoutPlans).filter(
-  ([key, plan]) => workoutFilter === 'all' || plan.category === workoutFilter
-)
     return (
       <main className="min-h-screen bg-black text-white flex flex-col items-center justify-center px-6 text-center">
         <h1 className="text-4xl font-bold mb-4">Bitte einloggen</h1>
@@ -553,27 +549,6 @@ const { error } = await supabase
     {message}
   </div>
 )}
-<div className="flex flex-wrap gap-2 mb-5">
-  {[
-    ['all', 'Alle'],
-    ['gym', 'Gym'],
-    ['home', 'Zuhause'],
-    ['fatloss', 'Fettverlust'],
-    ['short', 'Kurz'],
-  ].map(([value, label]) => (
-    <button
-      key={value}
-      onClick={() => setWorkoutFilter(value)}
-      className={`px-4 py-2 rounded-xl font-bold ${
-        workoutFilter === value
-          ? 'bg-white text-black'
-          : 'bg-black border border-gray-800 text-gray-400'
-      }`}
-    >
-      {label}
-    </button>
-  ))}
-</div>
 <div className="bg-gray-900 rounded-3xl border border-gray-800 p-6 mb-8">
   <div className="flex items-center justify-between mb-4">
     <h2 className="text-2xl font-bold">Trainingspläne</h2>
@@ -600,7 +575,7 @@ const { error } = await supabase
     </div>
   ) : (
     <div className="grid md:grid-cols-3 gap-4">
-  {filteredWorkoutPlans.map(([key, plan]) => (
+  {Object.entries(workoutPlans).map(([key, plan]) => (
     <div
       key={key}
       className="bg-black border border-gray-800 rounded-2xl p-5"
