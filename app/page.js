@@ -15,10 +15,7 @@ export default function Home() {
   const [password, setPassword] = useState('')
 
   const signIn = async () => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
 
     if (error) {
       alert(error.message)
@@ -29,10 +26,7 @@ export default function Home() {
   }
 
   const signUp = async () => {
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-    })
+    const { error } = await supabase.auth.signUp({ email, password })
 
     if (error) {
       alert(error.message)
@@ -43,159 +37,182 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-black text-white px-5 py-8">
-      <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-10 items-center min-h-[85vh]">
-        <section>
-          <div className="inline-block mb-6 rounded-full border border-gray-800 px-4 py-2 text-sm text-gray-400">
-            RESET · Dein System für tägliche Disziplin
-          </div>
-
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6">
-  Baue Fokus, Disziplin und Momentum auf.
-</h1>
-
-          <p className="text-gray-400 text-lg md:text-xl max-w-xl mb-8">
-  RESET hilft dir, deine wichtigsten Aufgaben zu erledigen, deinen Streak aufzubauen, Trainingspläne zu nutzen und mit einem KI-Coach dranzubleiben.
-</p>
-<div className="flex flex-col sm:flex-row gap-3 mb-8">
-  <a
-    href="#login"
-    className="bg-white text-black px-6 py-4 rounded-2xl font-bold text-center"
-  >
-    Kostenlos starten
-    <p className="text-gray-500 text-sm mb-8">
-  Kostenlos starten. Premium optional für 9,99 € pro Monat.
-</p>
-  </a>
-
-  <a
-    href="#features"
-    className="bg-gray-900 border border-gray-800 text-white px-6 py-4 rounded-2xl font-bold text-center"
-  >
-    Mehr erfahren
-  </a>
-</div>
-          <div id="features" className="grid sm:grid-cols-3 gap-4 max-w-xl">
-            <div className="bg-gray-900 border border-gray-800 rounded-2xl p-4">
-              <p className="text-2xl font-bold">🔥</p>
-              <p className="font-bold mt-2">Streaks</p>
-              <p className="text-gray-500 text-sm">Bleib dran.</p>
-            </div>
-
-            <div className="bg-gray-900 border border-gray-800 rounded-2xl p-4">
-              <p className="text-2xl font-bold">✅</p>
-              <p className="font-bold mt-2">Tasks</p>
-              <p className="text-gray-500 text-sm">Klarer Fokus.</p>
-            </div>
-
-            <div className="bg-gray-900 border border-gray-800 rounded-2xl p-4">
-              <p className="text-2xl font-bold">🤖</p>
-              <p className="font-bold mt-2">KI-Coach</p>
-              <p className="text-gray-500 text-sm">Premium.</p>
-            </div>
-
-            <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6">
-  <h3 className="text-xl font-bold mb-2">Trainingspläne</h3>
-  <p className="text-gray-400">
-    Nutze fertige Pläne für Gym, Zuhause, Muskelaufbau und schnelle Workouts.
-  </p>
-</div>
-<section className="max-w-5xl mx-auto px-6 py-20">
-  <div className="bg-gradient-to-br from-gray-900 to-black border border-gray-800 rounded-3xl p-8 md:p-10">
-    <p className="text-yellow-400 font-bold mb-3">RESET Premium</p>
-
-    <h2 className="text-3xl md:text-4xl font-bold mb-4">
-      Schalte deinen KI-Coach und Trainingspläne frei.
-    </h2>
-
-    <p className="text-gray-400 max-w-2xl mb-6">
-      Premium gibt dir mehr Struktur, Motivation und konkrete Pläne für deinen Alltag.
-    </p>
-
-    <ul className="text-gray-300 space-y-3 mb-8">
-      <li>✓ KI-Coach für Motivation und klare nächste Schritte</li>
-      <li>✓ Premium-Trainingspläne für Gym und Zuhause</li>
-      <li>✓ Trainingspläne als Tagesaufgaben übernehmen</li>
-      <li>✓ Mehr Fokus, Struktur und Momentum</li>
-    </ul>
-
-    <a
-      href="/login"
-      className="inline-block bg-white text-black px-8 py-4 rounded-2xl font-bold"
-    >
-      Kostenlos starten
-    </a>
-
-    <p className="text-gray-500 text-sm mt-4">
-      Premium optional für 9,99 € pro Monat.
-    </p>
-  </div>
-</section>
-          </div>
-        </section>
-          <div className="mt-8 border border-gray-800 rounded-3xl p-5 bg-gray-950 max-w-xl">
-  <p className="text-gray-400 text-sm mb-2">Für wen RESET ist</p>
-  <p className="text-white font-bold text-lg mb-2">
-    Für Menschen, die Struktur, Fokus und Momentum aufbauen wollen.
-  </p>
-  <p className="text-gray-500">
-    Keine überladene Produktivitäts-App. Kein kompliziertes System.
-    Nur tägliche Aufgaben, Streaks und ein Coach, der dich wieder auf Kurs bringt.
-  </p>
-</div>
-        <section id="login" className="bg-gray-900 border border-gray-800 rounded-3xl p-6 md:p-8">
-          <h2 className="text-3xl font-bold mb-2">Einloggen</h2>
-          <p className="text-gray-400 mb-6">
-            Logge dich ein und arbeite an deinem heutigen Fortschritt.
-          </p>
-
-          <input
-            type="email"
-            placeholder="E-Mail"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="bg-black border border-gray-700 px-4 py-3 rounded-xl w-full mb-4"
-          />
-
-          <input
-            type="password"
-            placeholder="Passwort"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="bg-black border border-gray-700 px-4 py-3 rounded-xl w-full mb-4"
-          />
-
-          <button
-            onClick={signIn}
-            className="bg-white text-black px-8 py-4 rounded-2xl font-bold mb-4 w-full"
-          >
+    <main className="min-h-screen bg-black text-white px-6 py-8">
+      <div className="max-w-6xl mx-auto">
+        <nav className="flex items-center justify-between mb-20">
+          <div className="text-2xl font-bold">RESET</div>
+          <a href="#login" className="text-gray-400 hover:text-white">
             Einloggen
-          </button>
+          </a>
+        </nav>
 
-          <button
-            onClick={signUp}
-            className="bg-black border border-gray-700 text-white px-8 py-4 rounded-2xl font-bold w-full"
+        <section className="grid lg:grid-cols-2 gap-12 items-center mb-24">
+          <div>
+            <div className="inline-block mb-6 rounded-full border border-gray-800 bg-gray-950 px-4 py-2 text-sm text-gray-400">
+              Daily Tasks · Streaks · KI-Coach · Trainingspläne
+            </div>
+
+            <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-tight mb-6">
+              Baue Fokus, Disziplin und Momentum auf.
+            </h1>
+
+            <p className="text-gray-400 text-lg md:text-xl max-w-xl mb-8">
+              RESET hilft dir, deine wichtigsten Aufgaben zu erledigen, deinen Streak aufzubauen,
+              Trainingspläne zu nutzen und mit einem KI-Coach dranzubleiben.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 mb-8">
+              <a
+                href="#login"
+                className="bg-white text-black px-7 py-4 rounded-2xl font-bold text-center"
+              >
+                Kostenlos starten
+              </a>
+
+              <a
+                href="#features"
+                className="bg-gray-900 border border-gray-800 px-7 py-4 rounded-2xl font-bold text-center"
+              >
+                Features ansehen
+              </a>
+            </div>
+
+            <p className="text-gray-500 text-sm">
+              Kostenlos nutzbar. Premium optional für 9,99 € pro Monat.
+            </p>
+          </div>
+
+          <section
+            id="login"
+            className="bg-gray-900 border border-gray-800 rounded-3xl p-6 md:p-8 shadow-2xl"
           >
-            Kostenlos registrieren
-          </button>
+            <h2 className="text-3xl font-bold mb-2">Starte mit RESET</h2>
+            <p className="text-gray-400 mb-6">
+              Logge dich ein oder erstelle kostenlos deinen Account.
+            </p>
 
-          <p className="text-gray-500 text-sm mt-6 text-center">
-            Kostenlos starten · Premium-Coach optional für 9,99 €/Monat
+            <input
+              type="email"
+              placeholder="E-Mail"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="bg-black border border-gray-700 px-4 py-3 rounded-xl w-full mb-4"
+            />
+
+            <input
+              type="password"
+              placeholder="Passwort"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="bg-black border border-gray-700 px-4 py-3 rounded-xl w-full mb-4"
+            />
+
+            <button
+              onClick={signIn}
+              className="bg-white text-black px-8 py-4 rounded-2xl font-bold mb-4 w-full"
+            >
+              Einloggen
+            </button>
+
+            <button
+              onClick={signUp}
+              className="bg-black border border-gray-700 text-white px-8 py-4 rounded-2xl font-bold w-full"
+            >
+              Kostenlos registrieren
+            </button>
+          </section>
+        </section>
+
+        <section id="features" className="grid md:grid-cols-4 gap-5 mb-24">
+          <div className="bg-gray-900 border border-gray-800 rounded-3xl p-6">
+            <p className="text-3xl mb-4">✅</p>
+            <h3 className="text-xl font-bold mb-2">Daily Tasks</h3>
+            <p className="text-gray-400">
+              Erstelle Aufgaben, hake sie ab und gewinne den Tag Schritt für Schritt.
+            </p>
+          </div>
+
+          <div className="bg-gray-900 border border-gray-800 rounded-3xl p-6">
+            <p className="text-3xl mb-4">🔥</p>
+            <h3 className="text-xl font-bold mb-2">Streaks</h3>
+            <p className="text-gray-400">
+              Bleib dran und baue sichtbares Momentum auf.
+            </p>
+          </div>
+
+          <div className="bg-gray-900 border border-gray-800 rounded-3xl p-6">
+            <p className="text-3xl mb-4">🤖</p>
+            <h3 className="text-xl font-bold mb-2">KI-Coach</h3>
+            <p className="text-gray-400">
+              Bekomme Motivation, Klarheit und konkrete nächste Schritte.
+            </p>
+          </div>
+
+          <div className="bg-gray-900 border border-gray-800 rounded-3xl p-6">
+            <p className="text-3xl mb-4">💪</p>
+            <h3 className="text-xl font-bold mb-2">Trainingspläne</h3>
+            <p className="text-gray-400">
+              Nutze Pläne für Gym, Zuhause, Muskelaufbau und schnelle Workouts.
+            </p>
+          </div>
+        </section>
+
+        <section className="bg-gradient-to-br from-gray-900 to-black border border-gray-800 rounded-3xl p-8 md:p-10 mb-24">
+          <div className="grid md:grid-cols-2 gap-10 items-center">
+            <div>
+              <p className="text-yellow-400 font-bold mb-3">RESET Premium</p>
+              <h2 className="text-3xl md:text-5xl font-bold mb-5">
+                Schalte Coach und Trainingspläne frei.
+              </h2>
+              <p className="text-gray-400 text-lg">
+                Premium gibt dir mehr Struktur, bessere Pläne und Unterstützung, wenn du festhängst.
+              </p>
+            </div>
+
+            <div className="bg-black border border-gray-800 rounded-3xl p-6">
+              <p className="text-5xl font-bold mb-2">9,99 €</p>
+              <p className="text-gray-500 mb-6">pro Monat</p>
+
+              <ul className="text-gray-300 space-y-3 mb-8">
+                <li>✓ KI-Coach für Motivation und Klarheit</li>
+                <li>✓ Premium-Trainingspläne</li>
+                <li>✓ Pläne als Tagesaufgaben übernehmen</li>
+                <li>✓ Mehr Fokus, Struktur und Momentum</li>
+              </ul>
+
+              <a
+                href="#login"
+                className="block bg-white text-black px-8 py-4 rounded-2xl font-bold text-center"
+              >
+                Kostenlos starten
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <section className="text-center mb-24">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4">
+            Kein kompliziertes System.
+          </h2>
+          <p className="text-gray-400 max-w-2xl mx-auto text-lg">
+            RESET ist für Menschen, die Struktur, Fokus und Momentum aufbauen wollen —
+            ohne überladene Produktivitäts-App.
           </p>
         </section>
-      </div>
-      <footer className="max-w-6xl mx-auto border-t border-gray-800 pt-6 mt-10 flex flex-col sm:flex-row gap-4 justify-between text-sm text-gray-500">
-  <p>© 2026 RESET · Version 1.0</p>
 
-  <div className="flex gap-4">
-    <a href="/impressum" className="hover:text-white">
-      Impressum
-    </a>
-    <a href="/datenschutz" className="hover:text-white">
-      Datenschutz
-    </a>
-  </div>
-</footer>
+        <footer className="border-t border-gray-800 pt-6 flex flex-col sm:flex-row gap-4 justify-between text-sm text-gray-500">
+          <p>© 2026 RESET · Version 1.0</p>
+
+          <div className="flex gap-4">
+            <a href="/impressum" className="hover:text-white">
+              Impressum
+            </a>
+            <a href="/datenschutz" className="hover:text-white">
+              Datenschutz
+            </a>
+          </div>
+        </footer>
+      </div>
     </main>
   )
 }
