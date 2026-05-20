@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@supabase/supabase-js'
@@ -28,9 +28,13 @@ export default function Dashboard() {
   const [coachLoading, setCoachLoading] = useState(false)
   const [successMessage, setSuccessMessage] = useState('')
   const [selectedWorkoutPlan, setSelectedWorkoutPlan] = useState(null)
+  const [workoutFilter, setWorkoutFilter] = useState('all')
 
   const today = new Date().toISOString().split('T')[0]
 
+  const filteredWorkoutPlans = Object.entries(workoutPlans).filter(
+    ([key, plan]) => workoutFilter === 'all' || plan.category === workoutFilter
+  )
 
   useEffect(() => {
     init()
@@ -46,11 +50,13 @@ export default function Dashboard() {
     }
 
     setUser(data.user)
-const params = new URLSearchParams(window.location.search)
 
-if (params.get('success') === 'true') {
-  setSuccessMessage('Premium wurde aktiviert. Willkommen bei RESET Premium.')
-}
+    const params = new URLSearchParams(window.location.search)
+
+    if (params.get('success') === 'true') {
+      setSuccessMessage('Premium wurde aktiviert. Willkommen bei RESET Premium.')
+    }
+
     await checkPremium(data.user.email)
     await createTasksIfNeeded(data.user.email)
     await loadTasks(data.user.email)
@@ -66,7 +72,7 @@ if (params.get('success') === 'true') {
       .eq('email', email)
       .maybeSingle()
 
-setPremium(userData?.is_premium === true)
+    setPremium(userData?.is_premium === true)
   }
 
   const createTasksIfNeeded = async (email) => {
@@ -167,7 +173,8 @@ setPremium(userData?.is_premium === true)
   const deleteTask = async (taskId) => {
     const confirmed = confirm('Aufgabe wirklich löschen?')
 
-if (!confirmed) return
+    if (!confirmed) return
+
     const { error } = await supabase
       .from('daily_tasks')
       .delete()
@@ -179,6 +186,43 @@ if (!confirmed) return
     }
 
     await loadTasks(user.email)
+  }
+
+  const addWorkoutTasks = async (planKey) => {
+    const plan = workoutPlans[planKey]
+
+    if (!plan) return
+
+    const workoutTasks = plan.tasks
+
+    const { data: existingTasks } = await supabase
+      .from('daily_tasks')
+      .select('*')
+      .eq('email', user.email)
+      .eq('date', today)
+      .in('title', workoutTasks)
+
+    if (existingTasks && existingTasks.length > 0) {
+      setMessage('Dieser Trainingsplan wurde heute schon hinzugefügt.')
+      return
+    }
+
+    const tasksToCreate = workoutTasks.map((title) => ({
+      email: user.email,
+      title,
+      completed: false,
+      date: today,
+    }))
+
+    const { error } = await supabase.from('daily_tasks').insert(tasksToCreate)
+
+    if (error) {
+      alert(error.message)
+      return
+    }
+
+    await loadTasks(user.email)
+    setMessage('Trainingsplan wurde zu deinen Aufgaben hinzugefügt.')
   }
 
   const completeDay = async () => {
@@ -232,9 +276,7 @@ if (!confirmed) return
     })
 
     const text = await response.text()
-    const data = text
-      ? JSON.parse(text)
-      : { error: 'Leere Antwort vom Checkout' }
+    const data = text ? JSON.parse(text) : { error: 'Leere Antwort vom Checkout' }
 
     if (data.url) {
       window.location.href = data.url
@@ -265,35 +307,35 @@ if (!confirmed) return
     })
 
     const text = await response.text()
-    const data = text
-      ? JSON.parse(text)
-      : { error: 'Leere Antwort vom Coach' }
+    const data = text ? JSON.parse(text) : { error: 'Leere Antwort vom Coach' }
 
     setCoachReply(data.reply || data.error || 'Coach konnte nicht antworten.')
     setCoachLoading(false)
   }
-const openCustomerPortal = async () => {
-  const response = await fetch('/api/customer-portal', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      email: user.email,
-    }),
-  })
 
-  const text = await response.text()
-  const data = text
-    ? JSON.parse(text)
-    : { error: 'Leere Antwort vom Customer Portal' }
+  const openCustomerPortal = async () => {
+    const response = await fetch('/api/customer-portal', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: user.email,
+      }),
+    })
 
-  if (data.url) {
-    window.location.href = data.url
-  } else {
-    alert(data.error || 'Customer Portal Fehler')
+    const text = await response.text()
+    const data = text
+      ? JSON.parse(text)
+      : { error: 'Leere Antwort vom Customer Portal' }
+
+    if (data.url) {
+      window.location.href = data.url
+    } else {
+      alert(data.error || 'Customer Portal Fehler')
+    }
   }
-}
+
   const logout = async () => {
     await supabase.auth.signOut()
     window.location.href = '/'
@@ -327,44 +369,14 @@ const openCustomerPortal = async () => {
       </main>
     )
   }
-const addWorkoutTasks = async () => {
-  const workoutTasks = [
-    'Liegestütze erledigen',
-    'Kniebeugen erledigen',
-    'Ausfallschritte erledigen',
-    'Plank erledigen',
-  ]
 
-  const tasksToCreate = workoutTasks.map((title) => ({
-    email: user.email,
-    title,
-    completed: false,
-    date: today,
-  }))
-
-  const { data: existingTasks } = await supabase
-  .from('daily_tasks')
-  .select('*')
-  .eq('email', user.email)
-  .eq('date', today)
-  .in('title', workoutTasks)
-
-if (existingTasks && existingTasks.length > 0) {
-  setMessage('Dieser Trainingsplan wurde heute schon hinzugefügt.')
-  return
-}
-
-const { error } = await supabase
-  .from('daily_tasks')
-  .insert(tasksToCreate)
-}
   return (
     <main className="min-h-screen bg-black text-white px-6 py-8">
       <div className="max-w-5xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
           <div>
             <p className="text-gray-500 mb-2">Willkommen zurück</p>
-<p className="text-gray-600 text-sm mb-2">{user.email}</p>
+            <p className="text-gray-600 text-sm mb-2">{user.email}</p>
             <h1 className="text-4xl md:text-5xl font-bold">RESET Dashboard</h1>
             <p className="text-gray-400 mt-2">
               Fokussiere dich auf das, was heute zählt.
@@ -381,14 +393,16 @@ const { error } = await supabase
                 {premium ? 'KI-Coach freigeschaltet' : 'Basis-Funktionen aktiv'}
               </p>
             </div>
-{premium && (
-  <button
-    onClick={openCustomerPortal}
-    className="bg-gray-900 border border-gray-800 rounded-2xl px-5 py-4 font-bold text-gray-300 hover:text-white flex-1"
-  >
-    Abo verwalten
-  </button>
-)}
+
+            {premium && (
+              <button
+                onClick={openCustomerPortal}
+                className="bg-gray-900 border border-gray-800 rounded-2xl px-5 py-4 font-bold text-gray-300 hover:text-white flex-1"
+              >
+                Abo verwalten
+              </button>
+            )}
+
             <button
               onClick={logout}
               className="bg-gray-900 border border-gray-800 rounded-2xl px-5 py-4 font-bold text-gray-300 hover:text-white flex-1"
@@ -397,34 +411,38 @@ const { error } = await supabase
             </button>
           </div>
         </div>
-{successMessage && (
-  <div className="bg-green-500 text-black px-5 py-4 rounded-2xl mb-6 font-bold">
-    {successMessage}
-  </div>
-)}<div className="grid md:grid-cols-3 gap-4 mb-6">
-  <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5">
-    <p className="text-gray-500 text-sm mb-1">Heute</p>
-    <p className="font-bold">
-      {new Date().toLocaleDateString('de-DE', {
-        weekday: 'long',
-        day: '2-digit',
-        month: 'long',
-      })}
-    </p>
-  </div>
 
-  <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5">
-    <p className="text-gray-500 text-sm mb-1">Aufgaben</p>
-    <p className="font-bold">
-      {completed}/{tasks.length} erledigt
-    </p>
-  </div>
+        {successMessage && premium && (
+          <div className="bg-green-500 text-black px-5 py-4 rounded-2xl mb-6 font-bold">
+            {successMessage}
+          </div>
+        )}
 
-  <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5">
-    <p className="text-gray-500 text-sm mb-1">Fortschritt</p>
-    <p className="font-bold">{progress}%</p>
-  </div>
-</div>
+        <div className="grid md:grid-cols-3 gap-4 mb-6">
+          <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5">
+            <p className="text-gray-500 text-sm mb-1">Heute</p>
+            <p className="font-bold">
+              {new Date().toLocaleDateString('de-DE', {
+                weekday: 'long',
+                day: '2-digit',
+                month: 'long',
+              })}
+            </p>
+          </div>
+
+          <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5">
+            <p className="text-gray-500 text-sm mb-1">Aufgaben</p>
+            <p className="font-bold">
+              {completed}/{tasks.length} erledigt
+            </p>
+          </div>
+
+          <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5">
+            <p className="text-gray-500 text-sm mb-1">Fortschritt</p>
+            <p className="font-bold">{progress}%</p>
+          </div>
+        </div>
+
         <div className="bg-gray-900 rounded-2xl p-6 mb-6">
           <p className="text-gray-400 mb-2">Dein Streak</p>
           <h2 className="text-5xl font-bold">🔥 {streak} Tage</h2>
@@ -440,9 +458,7 @@ const { error } = await supabase
             />
           </div>
 
-          <p>
-            Heute erledigt: {completed}/{tasks.length}
-          </p>
+          <p>Heute erledigt: {completed}/{tasks.length}</p>
         </div>
 
         {!premium && (
@@ -473,15 +489,17 @@ const { error } = await supabase
             </div>
           </div>
         )}
-{premium && (
-  <div className="bg-gray-900 border border-gray-800 rounded-3xl p-6 mb-8">
-    <p className="text-gray-500 text-sm mb-2">RESET Premium</p>
-    <h2 className="text-2xl font-bold mb-2">Dein KI-Coach ist aktiv 🔥</h2>
-    <p className="text-gray-400">
-      Nutze den Coach, wenn du Klarheit, Motivation oder einen konkreten Plan brauchst.
-    </p>
-  </div>
-)}
+
+        {premium && (
+          <div className="bg-gray-900 border border-gray-800 rounded-3xl p-6 mb-8">
+            <p className="text-gray-500 text-sm mb-2">RESET Premium</p>
+            <h2 className="text-2xl font-bold mb-2">Dein KI-Coach ist aktiv 🔥</h2>
+            <p className="text-gray-400">
+              Nutze den Coach, wenn du Klarheit, Motivation oder einen konkreten Plan brauchst.
+            </p>
+          </div>
+        )}
+
         <div className="bg-gray-900 rounded-2xl p-6 mb-6">
           <h2 className="text-2xl font-bold mb-4">Eigene Aufgabe hinzufügen</h2>
 
@@ -503,13 +521,13 @@ const { error } = await supabase
         </div>
 
         <div className="space-y-4 mb-6">
-  {tasks.length === 0 && (
-    <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 text-center text-gray-400">
-      Noch keine Aufgaben. Füge deine erste Aufgabe hinzu.
-    </div>
-  )}
+          {tasks.length === 0 && (
+            <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 text-center text-gray-400">
+              Noch keine Aufgaben. Füge deine erste Aufgabe hinzu.
+            </div>
+          )}
 
-  {tasks.map((task) => (
+          {tasks.map((task) => (
             <div
               key={task.id}
               className="w-full bg-gray-900 p-4 rounded-xl flex justify-between items-center gap-4"
@@ -545,83 +563,116 @@ const { error } = await supabase
         </button>
 
         {message && (
-  <div className="bg-gray-900 border border-gray-800 rounded-2xl p-4 text-center text-gray-300 mb-8">
-    {message}
-  </div>
-)}
-<div className="bg-gray-900 rounded-3xl border border-gray-800 p-6 mb-8">
-  <div className="flex items-center justify-between mb-4">
-    <h2 className="text-2xl font-bold">Trainingspläne</h2>
+          <div className="bg-gray-900 border border-gray-800 rounded-2xl p-4 text-center text-gray-300 mb-8">
+            {message}
+          </div>
+        )}
 
-    {!premium && (
-      <span className="text-sm bg-yellow-500 text-black px-3 py-1 rounded-full font-bold">
-        Premium gesperrt
-      </span>
-    )}
-  </div>
+        <div className="bg-gray-900 rounded-3xl border border-gray-800 p-6 mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="text-2xl font-bold">Premium Trainingspläne</h2>
+              <p className="text-gray-500 mt-1">
+                Wähle einen Plan und übernimm ihn direkt in deine Tagesaufgaben.
+              </p>
+            </div>
 
-  {!premium ? (
-    <div className="text-center py-8">
-      <p className="text-gray-400 mb-6">
-        Trainingspläne sind Teil von RESET Premium.
-      </p>
+            {!premium && (
+              <span className="text-sm bg-yellow-500 text-black px-3 py-1 rounded-full font-bold">
+                Premium gesperrt
+              </span>
+            )}
+          </div>
 
-      <button
-        onClick={startCheckout}
-        className="bg-white text-black px-6 py-3 rounded-2xl font-bold"
-      >
-        Premium freischalten
-      </button>
-    </div>
-  ) : (
-    <div className="grid md:grid-cols-3 gap-4">
-  {Object.entries(workoutPlans).map(([key, plan]) => (
-    <div
-      key={key}
-      className="bg-black border border-gray-800 rounded-2xl p-5"
-    >
-      <h3 className="text-xl font-bold mb-2">{plan.title}</h3>
-      <p className="text-gray-400 mb-4">{plan.subtitle}</p>
+          {!premium ? (
+            <div className="text-center py-8">
+              <p className="text-gray-400 mb-6">
+                Trainingspläne sind Teil von RESET Premium.
+              </p>
 
-      <button
-        onClick={() => setSelectedWorkoutPlan(plan)}
-        className="mt-4 w-full bg-white text-black py-3 rounded-xl font-bold"
-      >
-        Plan öffnen
-      </button>
+              <button
+                onClick={startCheckout}
+                className="bg-white text-black px-6 py-3 rounded-2xl font-bold"
+              >
+                Premium freischalten
+              </button>
+            </div>
+          ) : (
+            <>
+              <div className="flex flex-wrap gap-2 mb-5">
+                {[
+                  ['all', 'Alle'],
+                  ['gym', 'Gym'],
+                  ['home', 'Zuhause'],
+                  ['fatloss', 'Fettverlust'],
+                  ['short', 'Kurz'],
+                ].map(([value, label]) => (
+                  <button
+                    key={value}
+                    onClick={() => setWorkoutFilter(value)}
+                    className={`px-4 py-2 rounded-xl font-bold ${
+                      workoutFilter === value
+                        ? 'bg-white text-black'
+                        : 'bg-black border border-gray-800 text-gray-400'
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
 
-      <button
-        onClick={() => addWorkoutTasks(key)}
-        className="mt-3 w-full bg-gray-900 border border-gray-800 text-white py-3 rounded-xl font-bold"
-      >
-        Als Aufgaben übernehmen
-      </button>
-    </div>
-  ))}
-</div>
-  )}
-{selectedWorkoutPlan && (
-  <div className="mt-6 bg-black border border-gray-800 rounded-2xl p-5">
-    <div className="flex items-center justify-between gap-4 mb-4">
-      <h3 className="text-xl font-bold">{selectedWorkoutPlan.title}</h3>
+              <div className="grid md:grid-cols-3 gap-4">
+                {filteredWorkoutPlans.map(([key, plan]) => (
+                  <div
+                    key={key}
+                    className="bg-black border border-gray-800 rounded-2xl p-5"
+                  >
+                    <h3 className="text-xl font-bold mb-2">{plan.title}</h3>
+                    <p className="text-gray-400 mb-4">{plan.subtitle}</p>
 
-      <button
-        onClick={() => setSelectedWorkoutPlan(null)}
-        className="text-gray-500 hover:text-white font-bold"
-      >
-        Schließen
-      </button>
-    </div>
+                    <button
+                      onClick={() => setSelectedWorkoutPlan(plan)}
+                      className="mt-4 w-full bg-white text-black py-3 rounded-xl font-bold"
+                    >
+                      Plan öffnen
+                    </button>
 
-    <div className="text-gray-300 whitespace-pre-wrap">
-      {selectedWorkoutPlan.details}
-    </div>
-  </div>
-)}
-  <p className="text-gray-500 text-xs mt-6">
-    Hinweis: Die Trainingspläne ersetzen keine medizinische Beratung. Trainiere nur, wenn du gesund bist.
-  </p>
-</div>
+                    <button
+                      onClick={() => addWorkoutTasks(key)}
+                      className="mt-3 w-full bg-gray-900 border border-gray-800 text-white py-3 rounded-xl font-bold"
+                    >
+                      Als Aufgaben übernehmen
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
+          {selectedWorkoutPlan && (
+            <div className="mt-6 bg-black border border-gray-800 rounded-2xl p-5">
+              <div className="flex items-center justify-between gap-4 mb-4">
+                <h3 className="text-xl font-bold">{selectedWorkoutPlan.title}</h3>
+
+                <button
+                  onClick={() => setSelectedWorkoutPlan(null)}
+                  className="text-gray-500 hover:text-white font-bold"
+                >
+                  Schließen
+                </button>
+              </div>
+
+              <div className="text-gray-300 whitespace-pre-wrap">
+                {selectedWorkoutPlan.details}
+              </div>
+            </div>
+          )}
+
+          <p className="text-gray-500 text-xs mt-6">
+            Hinweis: Die Trainingspläne ersetzen keine medizinische Beratung. Trainiere nur, wenn du gesund bist.
+          </p>
+        </div>
+
         <div className="bg-gray-900 rounded-3xl border border-gray-800 p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold">KI Coach</h2>
@@ -635,23 +686,12 @@ const { error } = await supabase
 
           {!premium ? (
             <div className="text-center py-8">
-              <p className="text-gray-400 mb-6">
-                <div className="text-center py-8">
-  <p className="text-gray-400 mb-3">
-    Der KI-Coach ist Teil von RESET Premium.
-  </p>
+              <p className="text-gray-400 mb-3">
+                Der KI-Coach ist Teil von RESET Premium.
+              </p>
 
-  <p className="text-gray-500 mb-6">
-    Er hilft dir bei Motivation, Fokus, Tagesplanung und klaren nächsten Schritten.
-  </p>
-
-  <button
-    onClick={startCheckout}
-    className="bg-white text-black px-6 py-3 rounded-2xl font-bold"
-  >
-    Premium freischalten
-  </button>
-</div>
+              <p className="text-gray-500 mb-6">
+                Er hilft dir bei Motivation, Fokus, Tagesplanung und klaren nächsten Schritten.
               </p>
 
               <button
@@ -662,22 +702,24 @@ const { error } = await supabase
               </button>
             </div>
           ) : (
-            <><div className="grid sm:grid-cols-2 gap-3 mb-4">
-  {[
-    'Ich habe keine Motivation',
-    'Ich weiß nicht, womit ich anfangen soll',
-    'Ich habe heute versagt',
-    'Gib mir einen 10-Minuten-Plan',
-  ].map((prompt) => (
-    <button
-      key={prompt}
-      onClick={() => setCoachInput(prompt)}
-      className="bg-black border border-gray-800 rounded-xl px-4 py-3 text-left text-gray-300 hover:text-white hover:border-gray-600"
-    >
-      {prompt}
-    </button>
-  ))}
-</div>
+            <>
+              <div className="grid sm:grid-cols-2 gap-3 mb-4">
+                {[
+                  'Ich habe keine Motivation',
+                  'Ich weiß nicht, womit ich anfangen soll',
+                  'Ich habe heute versagt',
+                  'Gib mir einen 10-Minuten-Plan',
+                ].map((prompt) => (
+                  <button
+                    key={prompt}
+                    onClick={() => setCoachInput(prompt)}
+                    className="bg-black border border-gray-800 rounded-xl px-4 py-3 text-left text-gray-300 hover:text-white hover:border-gray-600"
+                  >
+                    {prompt}
+                  </button>
+                ))}
+              </div>
+
               <textarea
                 value={coachInput}
                 onChange={(e) => setCoachInput(e.target.value)}
