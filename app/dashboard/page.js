@@ -605,7 +605,7 @@ export default function Dashboard() {
                   ['gym', 'Gym'],
                   ['home', 'Zuhause'],
                   ['fatloss', 'Fettverlust'],
-                  ['short', 'Kurz'],
+                  ['short', '10-Minuten-Notfallplan'],
                 ].map(([value, label]) => (
                   <button
                     key={value}
