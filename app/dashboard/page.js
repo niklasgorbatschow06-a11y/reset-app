@@ -389,7 +389,7 @@ export default function Dashboard() {
 
   return (
     <main className="min-h-screen bg-black text-white px-6 py-8">
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
           <div>
             <p className="text-gray-500 mb-2">Willkommen zurück</p>
@@ -460,12 +460,12 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="bg-gray-900 rounded-2xl p-6 mb-6">
+        <div className="bg-gradient-to-br from-gray-900 to-black border border-gray-800 rounded-3xl p-6 mb-6">
           <p className="text-gray-400 mb-2">Dein Streak</p>
           <h2 className="text-5xl font-bold">🔥 {streak} Tage</h2>
         </div>
 
-        <div className="bg-gray-900 rounded-2xl p-6 mb-6">
+        <div className="bg-gray-900 border border-gray-800 rounded-3xl p-6 mb-8">
           <p className="text-gray-400 mb-2">Fortschritt</p>
 
           <div className="w-full bg-gray-800 rounded-full h-4 mb-4">
@@ -541,7 +541,7 @@ export default function Dashboard() {
     </div>
   </div>
 )}
-        <div className="bg-gray-900 rounded-2xl p-6 mb-6">
+        <div className="bg-gray-900 border border-gray-800 rounded-3xl p-6 mb-6">
           <h2 className="text-2xl font-bold mb-4">Eigene Aufgabe hinzufügen</h2>
 
           <div className="flex flex-col sm:flex-row gap-3">
