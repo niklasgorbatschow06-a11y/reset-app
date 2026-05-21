@@ -158,7 +158,26 @@ export default function Home() {
             </p>
           </div>
         </section>
+<section className="bg-gray-900 border border-gray-800 rounded-3xl p-8 md:p-10 mb-24">
+  <div className="grid md:grid-cols-2 gap-8 items-center">
+    <div>
+      <p className="text-yellow-400 font-bold mb-3">Premium Support</p>
+      <h2 className="text-3xl md:text-4xl font-bold mb-4">
+        Persönliches 1:1 Coaching anfragen.
+      </h2>
+      <p className="text-gray-400 text-lg">
+        Wenn du festhängst, kannst du als Premium-Nutzer direkt Unterstützung anfragen.
+      </p>
+    </div>
 
+    <a
+      href="#login"
+      className="bg-white text-black px-8 py-4 rounded-2xl font-bold text-center"
+    >
+      Premium starten
+    </a>
+  </div>
+</section>
         <section className="bg-gradient-to-br from-gray-900 to-black border border-gray-800 rounded-3xl p-8 md:p-10 mb-24">
           <div className="grid md:grid-cols-2 gap-10 items-center">
             <div>
