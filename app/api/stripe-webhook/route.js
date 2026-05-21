@@ -2,14 +2,9 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
+export const dynamic = 'force-dynamic'
 
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-)
-
-async function setPremiumByCustomerId(customerId, isPremium) {
+async function setPremiumByCustomerId(supabaseAdmin, customerId, isPremium) {
   if (!customerId) return
 
   const { data: userData } = await supabaseAdmin
@@ -29,6 +24,13 @@ async function setPremiumByCustomerId(customerId, isPremium) {
 }
 
 export async function POST(request) {
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
+
+  const supabaseAdmin = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY
+  )
+
   const body = await request.text()
   const signature = request.headers.get('stripe-signature')
 
@@ -71,7 +73,7 @@ export async function POST(request) {
 
     if (event.type === 'customer.subscription.deleted') {
       const subscription = event.data.object
-      await setPremiumByCustomerId(subscription.customer, false)
+      await setPremiumByCustomerId(supabaseAdmin, subscription.customer, false)
     }
 
     if (event.type === 'customer.subscription.updated') {
@@ -83,7 +85,7 @@ export async function POST(request) {
         subscription.status === 'unpaid' ||
         subscription.status === 'incomplete_expired'
       ) {
-        await setPremiumByCustomerId(subscription.customer, false)
+        await setPremiumByCustomerId(supabaseAdmin, subscription.customer, false)
       }
     }
 

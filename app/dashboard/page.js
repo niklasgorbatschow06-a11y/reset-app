@@ -4,10 +4,13 @@ import { useEffect, useState } from 'react'
 import { createClient } from '@supabase/supabase-js'
 import { workoutPlans } from '../data/workoutPlans'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-)
+export const dynamic = 'force-dynamic'
+
+const getSupabase = () =>
+  createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder'
+  )
 
 const defaultTasks = [
   'Trainiere deinen Körper',
@@ -16,6 +19,8 @@ const defaultTasks = [
 ]
 
 export default function Dashboard() {
+  const supabase = getSupabase()
+
   const [tasks, setTasks] = useState([])
   const [premium, setPremium] = useState(false)
   const [user, setUser] = useState(null)
@@ -226,55 +231,55 @@ export default function Dashboard() {
   }
 
   const completeDay = async () => {
-  const allDone = tasks.every((task) => task.completed)
+    const allDone = tasks.every((task) => task.completed)
 
-  if (!allDone) {
-    setMessage('Erledige zuerst alle Aufgaben.')
-    return
+    if (!allDone) {
+      setMessage('Erledige zuerst alle Aufgaben.')
+      return
+    }
+
+    const { data } = await supabase
+      .from('streaks')
+      .select('*')
+      .eq('email', user.email)
+      .maybeSingle()
+
+    if (data?.last_completed === today) {
+      setMessage('Du hast deinen Streak heute schon gesichert.')
+      return
+    }
+
+    const yesterdayDate = new Date()
+    yesterdayDate.setDate(yesterdayDate.getDate() - 1)
+    const yesterday = yesterdayDate.toISOString().split('T')[0]
+
+    let newStreak = 1
+
+    if (data?.last_completed === yesterday) {
+      newStreak = Number(data.streak || 0) + 1
+    }
+
+    const { error } = await supabase
+      .from('streaks')
+      .upsert(
+        {
+          email: user.email,
+          streak: newStreak,
+          last_completed: today,
+        },
+        {
+          onConflict: 'email',
+        }
+      )
+
+    if (error) {
+      alert(error.message)
+      return
+    }
+
+    setStreak(newStreak)
+    setMessage('Tag abgeschlossen. Streak gespeichert.')
   }
-
-  const { data } = await supabase
-    .from('streaks')
-    .select('*')
-    .eq('email', user.email)
-    .maybeSingle()
-
-  if (data?.last_completed === today) {
-    setMessage('Du hast deinen Streak heute schon gesichert.')
-    return
-  }
-
-  const yesterdayDate = new Date()
-  yesterdayDate.setDate(yesterdayDate.getDate() - 1)
-  const yesterday = yesterdayDate.toISOString().split('T')[0]
-
-  let newStreak = 1
-
-  if (data?.last_completed === yesterday) {
-    newStreak = Number(data.streak || 0) + 1
-  }
-
-  const { error } = await supabase
-    .from('streaks')
-    .upsert(
-      {
-        email: user.email,
-        streak: newStreak,
-        last_completed: today,
-      },
-      {
-        onConflict: 'email',
-      }
-    )
-
-  if (error) {
-    alert(error.message)
-    return
-  }
-
-  setStreak(newStreak)
-  setMessage('Tag abgeschlossen. Streak gespeichert.')
-}
 
   const startCheckout = async () => {
     const response = await fetch('/api/checkout', {
