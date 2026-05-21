@@ -517,24 +517,28 @@ export default function Dashboard() {
           </div>
         )}
 {premium && (
-  <div className="bg-gray-900 border border-gray-800 rounded-3xl p-6 mb-8">
-    <p className="text-yellow-400 font-bold mb-2">1:1 Coaching</p>
+  <div className="bg-gradient-to-br from-gray-900 to-black border border-gray-800 rounded-3xl p-6 mb-8">
+    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+      <div>
+        <p className="text-yellow-400 font-bold mb-2">Premium Vorteil</p>
 
-    <h2 className="text-2xl font-bold mb-3">
-      Persönliches Coaching mit Niklas
-    </h2>
+        <h2 className="text-2xl md:text-3xl font-bold mb-3">
+          1:1 Coaching mit Niklas anfragen
+        </h2>
 
-    <p className="text-gray-400 mb-5">
-      Als Premium-Nutzer kannst du ein persönliches 1:1 Coaching anfragen.
-      Schreib kurz, wobei du Unterstützung brauchst.
-    </p>
+        <p className="text-gray-400 max-w-2xl">
+          Wenn du festhängst, kannst du als Premium-Nutzer persönliches Coaching anfragen.
+          Schreib kurz dein Ziel, deine Situation und wobei du Unterstützung brauchst.
+        </p>
+      </div>
 
-    <a
-      href={`mailto:niklas.gorbatschow06@gmail.com?subject=1:1 Coaching Anfrage&body=Hi Niklas,%0D%0A%0D%0Aich möchte ein 1:1 Coaching vereinbaren.%0D%0A%0D%0AMein Ziel:%0D%0AMeine aktuelle Situation:%0D%0AWobei ich Hilfe brauche:%0D%0A%0D%0A`}
-      className="inline-block bg-white text-black px-6 py-3 rounded-2xl font-bold"
-    >
-      1:1 Coaching anfragen
-    </a>
+      <a
+        href={`mailto:niklas.gorbatschow06@gmail.com?subject=1:1 Coaching Anfrage&body=Hi Niklas,%0D%0A%0D%0Aich möchte ein 1:1 Coaching vereinbaren.%0D%0A%0D%0AMein Ziel:%0D%0AMeine aktuelle Situation:%0D%0AWobei ich Hilfe brauche:%0D%0A%0D%0A`}
+        className="bg-white text-black px-6 py-4 rounded-2xl font-bold text-center whitespace-nowrap"
+      >
+        Coaching anfragen
+      </a>
+    </div>
   </div>
 )}
         <div className="bg-gray-900 rounded-2xl p-6 mb-6">
