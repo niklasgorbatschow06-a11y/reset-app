@@ -511,6 +511,27 @@ export default function Dashboard() {
           <div className="bg-gray-900 border border-gray-800 rounded-3xl p-6 mb-8">
             <p className="text-gray-500 text-sm mb-2">RESET Premium</p>
             <h2 className="text-2xl font-bold mb-2">Dein KI-Coach ist aktiv 🔥</h2>
+            {premium && (
+  <div className="bg-gray-900 border border-gray-800 rounded-3xl p-6 mb-8">
+    <p className="text-yellow-400 font-bold mb-2">1:1 Coaching</p>
+
+    <h2 className="text-2xl font-bold mb-3">
+      Persönliches Coaching mit Niklas
+    </h2>
+
+    <p className="text-gray-400 mb-5">
+      Als Premium-Nutzer kannst du ein persönliches 1:1 Coaching anfragen.
+      Schreib kurz, wobei du Unterstützung brauchst.
+    </p>
+
+    <a
+      href={`mailto:niklas.gorbatschow06@gmail.com?subject=1:1 Coaching Anfrage&body=Hi Niklas,%0D%0A%0D%0Aich möchte ein 1:1 Coaching vereinbaren.%0D%0A%0D%0AMein Ziel:%0D%0AMeine aktuelle Situation:%0D%0AWobei ich Hilfe brauche:%0D%0A%0D%0A`}
+      className="inline-block bg-white text-black px-6 py-3 rounded-2xl font-bold"
+    >
+      1:1 Coaching anfragen
+    </a>
+  </div>
+)}
             <p className="text-gray-400">
               Nutze den Coach, wenn du Klarheit, Motivation oder einen konkreten Plan brauchst.
             </p>
