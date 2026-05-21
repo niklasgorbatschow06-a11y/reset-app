@@ -2,15 +2,17 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
-
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-)
+export const dynamic = 'force-dynamic'
 
 export async function POST(request) {
   try {
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
+
+    const supabaseAdmin = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_ROLE_KEY
+    )
+
     const { email } = await request.json()
 
     if (!email) {
@@ -28,7 +30,7 @@ export async function POST(request) {
 
     if (!userData?.stripe_customer_id) {
       return NextResponse.json(
-        { error: 'Kein Stripe-Kunde gefunden. Bitte Premium einmal neu über diesen Account kaufen.' },
+        { error: 'Kein Stripe-Kunde gefunden.' },
         { status: 404 }
       )
     }
