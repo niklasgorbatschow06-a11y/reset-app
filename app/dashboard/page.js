@@ -226,43 +226,55 @@ export default function Dashboard() {
   }
 
   const completeDay = async () => {
-    const allDone = tasks.every((task) => task.completed)
+  const allDone = tasks.every((task) => task.completed)
 
-    if (!allDone) {
-      setMessage('Erledige zuerst alle Aufgaben.')
-      return
-    }
-
-    const { data } = await supabase
-      .from('streaks')
-      .select('*')
-      .eq('email', user.email)
-      .maybeSingle()
-
-    if (data?.last_completed === today) {
-      setMessage('Du hast deinen Streak heute schon gesichert.')
-      return
-    }
-
-    const yesterdayDate = new Date()
-    yesterdayDate.setDate(yesterdayDate.getDate() - 1)
-    const yesterday = yesterdayDate.toISOString().split('T')[0]
-
-    let newStreak = 1
-
-    if (data?.last_completed === yesterday) {
-      newStreak = (data?.streak || 0) + 1
-    }
-
-    await supabase.from('streaks').upsert({
-      email: user.email,
-      streak: newStreak,
-      last_completed: today,
-    })
-
-    setStreak(newStreak)
-    setMessage('Tag abgeschlossen. Streak gespeichert.')
+  if (!allDone) {
+    setMessage('Erledige zuerst alle Aufgaben.')
+    return
   }
+
+  const { data } = await supabase
+    .from('streaks')
+    .select('*')
+    .eq('email', user.email)
+    .maybeSingle()
+
+  if (data?.last_completed === today) {
+    setMessage('Du hast deinen Streak heute schon gesichert.')
+    return
+  }
+
+  const yesterdayDate = new Date()
+  yesterdayDate.setDate(yesterdayDate.getDate() - 1)
+  const yesterday = yesterdayDate.toISOString().split('T')[0]
+
+  let newStreak = 1
+
+  if (data?.last_completed === yesterday) {
+    newStreak = Number(data.streak || 0) + 1
+  }
+
+  const { error } = await supabase
+    .from('streaks')
+    .upsert(
+      {
+        email: user.email,
+        streak: newStreak,
+        last_completed: today,
+      },
+      {
+        onConflict: 'email',
+      }
+    )
+
+  if (error) {
+    alert(error.message)
+    return
+  }
+
+  setStreak(newStreak)
+  setMessage('Tag abgeschlossen. Streak gespeichert.')
+}
 
   const startCheckout = async () => {
     const response = await fetch('/api/checkout', {
