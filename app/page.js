@@ -127,7 +127,7 @@ export default function Home() {
 
         <section id="features" className="grid md:grid-cols-4 gap-5 mb-24">
           <div className="bg-gray-900 border border-gray-800 rounded-3xl p-6">
-            <p className="text-3xl mb-4">âœ…</p>
+            <p className="text-3xl mb-4">✅</p>
             <h3 className="text-xl font-bold mb-2">Daily Tasks</h3>
             <p className="text-gray-400">
               Erstelle Aufgaben, hake sie ab und gewinne den Tag Schritt für Schritt.
