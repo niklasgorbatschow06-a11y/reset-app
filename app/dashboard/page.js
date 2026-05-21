@@ -89,14 +89,14 @@ export default function Dashboard() {
 
     if (data && data.length > 0) return
 
-    const tasksToCreate = defaultTasks.map((title) => ({
-      email,
-      title,
-      completed: false,
-      date: today,
-    }))
-
-    await supabase.from('daily_tasks').insert(tasksToCreate)
+    await supabase.from('daily_tasks').insert(
+      defaultTasks.map((title) => ({
+        email,
+        title,
+        completed: false,
+        date: today,
+      }))
+    )
   }
 
   const loadTasks = async (email) => {
@@ -177,7 +177,6 @@ export default function Dashboard() {
 
   const deleteTask = async (taskId) => {
     const confirmed = confirm('Aufgabe wirklich löschen?')
-
     if (!confirmed) return
 
     const { error } = await supabase
@@ -195,7 +194,6 @@ export default function Dashboard() {
 
   const addWorkoutTasks = async (planKey) => {
     const plan = workoutPlans[planKey]
-
     if (!plan) return
 
     const workoutTasks = plan.tasks
@@ -212,14 +210,14 @@ export default function Dashboard() {
       return
     }
 
-    const tasksToCreate = workoutTasks.map((title) => ({
-      email: user.email,
-      title,
-      completed: false,
-      date: today,
-    }))
-
-    const { error } = await supabase.from('daily_tasks').insert(tasksToCreate)
+    const { error } = await supabase.from('daily_tasks').insert(
+      workoutTasks.map((title) => ({
+        email: user.email,
+        title,
+        completed: false,
+        date: today,
+      }))
+    )
 
     if (error) {
       alert(error.message)
@@ -259,18 +257,14 @@ export default function Dashboard() {
       newStreak = Number(data.streak || 0) + 1
     }
 
-    const { error } = await supabase
-      .from('streaks')
-      .upsert(
-        {
-          email: user.email,
-          streak: newStreak,
-          last_completed: today,
-        },
-        {
-          onConflict: 'email',
-        }
-      )
+    const { error } = await supabase.from('streaks').upsert(
+      {
+        email: user.email,
+        streak: newStreak,
+        last_completed: today,
+      },
+      { onConflict: 'email' }
+    )
 
     if (error) {
       alert(error.message)
@@ -284,22 +278,15 @@ export default function Dashboard() {
   const startCheckout = async () => {
     const response = await fetch('/api/checkout', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: user.email,
-      }),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: user.email }),
     })
 
     const text = await response.text()
     const data = text ? JSON.parse(text) : { error: 'Leere Antwort vom Checkout' }
 
-    if (data.url) {
-      window.location.href = data.url
-    } else {
-      alert(data.error || 'Checkout Fehler')
-    }
+    if (data.url) window.location.href = data.url
+    else alert(data.error || 'Checkout Fehler')
   }
 
   const askCoach = async () => {
@@ -315,12 +302,8 @@ export default function Dashboard() {
 
     const response = await fetch('/api/coach', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        message: coachInput,
-      }),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: coachInput }),
     })
 
     const text = await response.text()
@@ -333,12 +316,8 @@ export default function Dashboard() {
   const openCustomerPortal = async () => {
     const response = await fetch('/api/customer-portal', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: user.email,
-      }),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: user.email }),
     })
 
     const text = await response.text()
@@ -346,11 +325,8 @@ export default function Dashboard() {
       ? JSON.parse(text)
       : { error: 'Leere Antwort vom Customer Portal' }
 
-    if (data.url) {
-      window.location.href = data.url
-    } else {
-      alert(data.error || 'Customer Portal Fehler')
-    }
+    if (data.url) window.location.href = data.url
+    else alert(data.error || 'Customer Portal Fehler')
   }
 
   const logout = async () => {
@@ -377,10 +353,7 @@ export default function Dashboard() {
         <p className="text-gray-400 mb-6">
           Du musst eingeloggt sein, um dein Dashboard zu sehen.
         </p>
-        <a
-          href="/"
-          className="bg-white text-black px-8 py-4 rounded-2xl font-bold"
-        >
+        <a href="/" className="bg-white text-black px-8 py-4 rounded-2xl font-bold">
           Zum Login
         </a>
       </main>
@@ -388,46 +361,48 @@ export default function Dashboard() {
   }
 
   return (
-    <main className="min-h-screen bg-black text-white px-6 py-8">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
-          <div>
-            <p className="text-gray-500 mb-2">Willkommen zurück</p>
-            <p className="text-gray-600 text-sm mb-2">{user.email}</p>
-            <h1 className="text-4xl md:text-5xl font-bold">RESET Dashboard</h1>
-            <p className="text-gray-400 mt-2">
-              Fokussiere dich auf das, was heute zählt.
-            </p>
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-            <div className="bg-gray-900 border border-gray-800 rounded-2xl px-5 py-4 flex-1">
-              <p className="text-gray-500 text-sm">Status</p>
-              <p className="font-bold">
-                {premium ? 'Premium aktiv 🔥' : 'Free Plan'}
+    <main className="min-h-screen bg-black text-white px-5 py-6">
+      <div className="max-w-7xl mx-auto">
+        <header className="bg-gradient-to-br from-gray-900 to-black border border-gray-800 rounded-3xl p-6 md:p-8 mb-6">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+            <div>
+              <p className="text-gray-500 mb-2">Willkommen zurück</p>
+              <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
+                RESET Dashboard
+              </h1>
+              <p className="text-gray-400 mt-3 max-w-2xl">
+                Fokussiere dich auf das, was heute zählt. Aufgaben erledigen,
+                Streak sichern und Momentum aufbauen.
               </p>
-              <p className="text-gray-500 text-xs mt-1">
-                {premium ? 'KI-Coach freigeschaltet' : 'Basis-Funktionen aktiv'}
-              </p>
+              <p className="text-gray-600 text-sm mt-3">{user.email}</p>
             </div>
 
-            {premium && (
-              <button
-                onClick={openCustomerPortal}
-                className="bg-gray-900 border border-gray-800 rounded-2xl px-5 py-4 font-bold text-gray-300 hover:text-white flex-1"
-              >
-                Abo verwalten
-              </button>
-            )}
+            <div className="grid sm:grid-cols-3 gap-3">
+              <div className="bg-black border border-gray-800 rounded-2xl p-4">
+                <p className="text-gray-500 text-sm">Status</p>
+                <p className="font-bold">
+                  {premium ? 'Premium aktiv 🔥' : 'Free Plan'}
+                </p>
+              </div>
 
-            <button
-              onClick={logout}
-              className="bg-gray-900 border border-gray-800 rounded-2xl px-5 py-4 font-bold text-gray-300 hover:text-white flex-1"
-            >
-              Logout
-            </button>
+              {premium && (
+                <button
+                  onClick={openCustomerPortal}
+                  className="bg-black border border-gray-800 rounded-2xl p-4 font-bold text-gray-300 hover:text-white"
+                >
+                  Abo verwalten
+                </button>
+              )}
+
+              <button
+                onClick={logout}
+                className="bg-black border border-gray-800 rounded-2xl p-4 font-bold text-gray-300 hover:text-white"
+              >
+                Logout
+              </button>
+            </div>
           </div>
-        </div>
+        </header>
 
         {successMessage && premium && (
           <div className="bg-green-500 text-black px-5 py-4 rounded-2xl mb-6 font-bold">
@@ -435,9 +410,9 @@ export default function Dashboard() {
           </div>
         )}
 
-        <div className="grid md:grid-cols-3 gap-4 mb-6">
-          <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5">
-            <p className="text-gray-500 text-sm mb-1">Heute</p>
+        <section className="grid md:grid-cols-4 gap-4 mb-6">
+          <div className="bg-gray-900 border border-gray-800 rounded-3xl p-5">
+            <p className="text-gray-500 text-sm mb-2">Heute</p>
             <p className="font-bold">
               {new Date().toLocaleDateString('de-DE', {
                 weekday: 'long',
@@ -447,54 +422,227 @@ export default function Dashboard() {
             </p>
           </div>
 
-          <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5">
-            <p className="text-gray-500 text-sm mb-1">Aufgaben</p>
-            <p className="font-bold">
-              {completed}/{tasks.length} erledigt
+          <div className="bg-gray-900 border border-gray-800 rounded-3xl p-5">
+            <p className="text-gray-500 text-sm mb-2">Streak</p>
+            <p className="text-3xl font-bold">🔥 {streak}</p>
+          </div>
+
+          <div className="bg-gray-900 border border-gray-800 rounded-3xl p-5">
+            <p className="text-gray-500 text-sm mb-2">Aufgaben</p>
+            <p className="text-3xl font-bold">
+              {completed}/{tasks.length}
             </p>
           </div>
 
-          <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5">
-            <p className="text-gray-500 text-sm mb-1">Fortschritt</p>
-            <p className="font-bold">{progress}%</p>
+          <div className="bg-gray-900 border border-gray-800 rounded-3xl p-5">
+            <p className="text-gray-500 text-sm mb-2">Fortschritt</p>
+            <p className="text-3xl font-bold">{progress}%</p>
           </div>
-        </div>
+        </section>
 
-        <div className="bg-gradient-to-br from-gray-900 to-black border border-gray-800 rounded-3xl p-6 mb-6">
-          <p className="text-gray-400 mb-2">Dein Streak</p>
-          <h2 className="text-5xl font-bold">🔥 {streak} Tage</h2>
-        </div>
+        <div className="grid lg:grid-cols-3 gap-6">
+          <section className="lg:col-span-2 space-y-6">
+            <div className="bg-gray-900 border border-gray-800 rounded-3xl p-6">
+              <div className="flex items-center justify-between mb-5">
+                <div>
+                  <h2 className="text-2xl font-bold">Heute erledigen</h2>
+                  <p className="text-gray-500">
+                    Heute erledigt: {completed}/{tasks.length}
+                  </p>
+                </div>
 
-        <div className="bg-gray-900 border border-gray-800 rounded-3xl p-6 mb-8">
-          <p className="text-gray-400 mb-2">Fortschritt</p>
-
-          <div className="w-full bg-gray-800 rounded-full h-4 mb-4">
-            <div
-              className="bg-white h-4 rounded-full"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-
-          <p>Heute erledigt: {completed}/{tasks.length}</p>
-        </div>
-
-        {!premium && (
-          <div className="bg-gradient-to-br from-gray-900 to-black border border-gray-800 rounded-3xl p-6 mb-8">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-              <div>
-                <p className="text-yellow-400 font-bold mb-2">RESET Premium</p>
-                <h2 className="text-3xl font-bold mb-3">
-                  Schalte deinen KI-Coach frei
-                </h2>
-                <p className="text-gray-400 max-w-xl">
-                  Erhalte persönliche Motivation, klare nächste Schritte und direkte Antworten, wenn du festhängst.
-                </p>
+                <div className="text-right">
+                  <p className="text-3xl font-bold">{progress}%</p>
+                </div>
               </div>
 
-              <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5 min-w-64">
-                <p className="text-gray-400 mb-1">Nur</p>
-                <p className="text-4xl font-bold mb-4">9,99 €</p>
-                <p className="text-gray-500 mb-4">pro Monat</p>
+              <div className="w-full bg-gray-800 rounded-full h-3 mb-6">
+                <div
+                  className="bg-white h-3 rounded-full"
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-3 mb-5">
+                <input
+                  value={newTask}
+                  onChange={(e) => setNewTask(e.target.value)}
+                  placeholder="Was willst du heute erledigen?"
+                  className="flex-1 bg-black border border-gray-700 rounded-xl px-4 py-3"
+                />
+
+                <button
+                  onClick={addTask}
+                  className="bg-white text-black px-6 py-3 rounded-xl font-bold"
+                >
+                  Hinzufügen
+                </button>
+              </div>
+
+              <div className="space-y-3">
+                {tasks.length === 0 && (
+                  <div className="bg-black border border-gray-800 rounded-2xl p-6 text-center text-gray-400">
+                    Noch keine Aufgaben. Füge deine erste Aufgabe hinzu.
+                  </div>
+                )}
+
+                {tasks.map((task) => (
+                  <div
+                    key={task.id}
+                    className="bg-black border border-gray-800 rounded-2xl p-4 flex items-center gap-4"
+                  >
+                    <button
+                      onClick={() => toggleTask(task)}
+                      className="flex-1 flex justify-between text-left"
+                    >
+                      <span className={task.completed ? 'line-through text-gray-500' : ''}>
+                        {task.title}
+                      </span>
+                      <span>{task.completed ? '✅' : '⬜'}</span>
+                    </button>
+
+                    <button
+                      onClick={() => deleteTask(task.id)}
+                      className="text-gray-500 hover:text-red-400 font-bold"
+                    >
+                      Löschen
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              <button
+                onClick={completeDay}
+                className="mt-6 w-full bg-white text-black py-4 rounded-2xl font-bold"
+              >
+                Tag abschließen
+              </button>
+
+              {message && (
+                <div className="mt-4 bg-black border border-gray-800 rounded-2xl p-4 text-center text-gray-300">
+                  {message}
+                </div>
+              )}
+            </div>
+
+            <div className="bg-gray-900 border border-gray-800 rounded-3xl p-6">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+                <div>
+                  <h2 className="text-2xl font-bold">Premium Trainingspläne</h2>
+                  <p className="text-gray-500 mt-1">
+                    Wähle einen Plan und übernimm ihn direkt in deine Tagesaufgaben.
+                  </p>
+                </div>
+
+                {!premium && (
+                  <span className="text-sm bg-yellow-500 text-black px-3 py-1 rounded-full font-bold w-fit">
+                    Premium gesperrt
+                  </span>
+                )}
+              </div>
+
+              {!premium ? (
+                <div className="text-center py-8">
+                  <p className="text-gray-400 mb-6">
+                    Trainingspläne sind Teil von RESET Premium.
+                  </p>
+
+                  <button
+                    onClick={startCheckout}
+                    className="bg-white text-black px-6 py-3 rounded-2xl font-bold"
+                  >
+                    Premium freischalten
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <div className="flex flex-wrap gap-2 mb-5">
+                    {[
+                      ['all', 'Alle'],
+                      ['gym', 'Gym'],
+                      ['home', 'Zuhause'],
+                    ].map(([value, label]) => (
+                      <button
+                        key={value}
+                        onClick={() => setWorkoutFilter(value)}
+                        className={`px-4 py-2 rounded-xl font-bold ${
+                          workoutFilter === value
+                            ? 'bg-white text-black'
+                            : 'bg-black border border-gray-800 text-gray-400'
+                        }`}
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {filteredWorkoutPlans.map(([key, plan]) => (
+                      <div
+                        key={key}
+                        className="bg-black border border-gray-800 rounded-2xl p-5"
+                      >
+                        <h3 className="text-xl font-bold mb-2">{plan.title}</h3>
+                        <p className="text-gray-400 mb-4">{plan.subtitle}</p>
+
+                        <button
+                          onClick={() => setSelectedWorkoutPlan(plan)}
+                          className="w-full bg-white text-black py-3 rounded-xl font-bold"
+                        >
+                          Plan öffnen
+                        </button>
+
+                        <button
+                          onClick={() => addWorkoutTasks(key)}
+                          className="mt-3 w-full bg-gray-900 border border-gray-800 text-white py-3 rounded-xl font-bold"
+                        >
+                          Als Aufgaben übernehmen
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+
+              {selectedWorkoutPlan && (
+                <div className="mt-6 bg-black border border-gray-800 rounded-2xl p-5">
+                  <div className="flex items-center justify-between gap-4 mb-4">
+                    <h3 className="text-xl font-bold">{selectedWorkoutPlan.title}</h3>
+
+                    <button
+                      onClick={() => setSelectedWorkoutPlan(null)}
+                      className="text-gray-500 hover:text-white font-bold"
+                    >
+                      Schließen
+                    </button>
+                  </div>
+
+                  <div className="text-gray-300 whitespace-pre-wrap">
+                    {selectedWorkoutPlan.details}
+                  </div>
+                </div>
+              )}
+
+              <p className="text-gray-500 text-xs mt-6">
+                Hinweis: Die Trainingspläne ersetzen keine medizinische Beratung.
+                Trainiere nur, wenn du gesund bist.
+              </p>
+            </div>
+          </section>
+
+          <aside className="space-y-6">
+            {!premium && (
+              <div className="bg-gradient-to-br from-gray-900 to-black border border-gray-800 rounded-3xl p-6">
+                <p className="text-yellow-400 font-bold mb-2">RESET Premium</p>
+                <h2 className="text-2xl font-bold mb-3">
+                  Coach, Trainingspläne und 1:1 Support
+                </h2>
+                <p className="text-gray-400 mb-5">
+                  Schalte deinen KI-Coach frei und nutze Premium-Trainingspläne.
+                </p>
+
+                <p className="text-4xl font-bold mb-1">9,99 €</p>
+                <p className="text-gray-500 mb-5">pro Monat</p>
 
                 <button
                   onClick={startCheckout}
@@ -503,284 +651,106 @@ export default function Dashboard() {
                   Premium starten
                 </button>
               </div>
-            </div>
-          </div>
-        )}
-
-        {premium && (
-          <div className="bg-gray-900 border border-gray-800 rounded-3xl p-6 mb-8">
-            <p className="text-gray-500 text-sm mb-2">RESET Premium</p>
-            <h2 className="text-2xl font-bold mb-2">Dein KI-Coach ist aktiv 🔥</h2>
-            <p className="text-gray-400">
-              Nutze den Coach, wenn du Klarheit, Motivation oder einen konkreten Plan brauchst.
-            </p>
-          </div>
-        )}
-{premium && (
-  <div className="bg-gradient-to-br from-gray-900 to-black border border-gray-800 rounded-3xl p-6 mb-8">
-    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-      <div>
-        <p className="text-yellow-400 font-bold mb-2">Premium Vorteil</p>
-
-        <h2 className="text-2xl md:text-3xl font-bold mb-3">
-          1:1 Coaching mit Niklas anfragen
-        </h2>
-
-        <p className="text-gray-400 max-w-2xl">
-          Wenn du festhängst, kannst du als Premium-Nutzer persönliches Coaching anfragen.
-          Schreib kurz dein Ziel, deine Situation und wobei du Unterstützung brauchst.
-        </p>
-      </div>
-
-      <a
-        href={`mailto:niklas.gorbatschow06@gmail.com?subject=1:1 Coaching Anfrage&body=Hi Niklas,%0D%0A%0D%0Aich möchte ein 1:1 Coaching vereinbaren.%0D%0A%0D%0AMein Ziel:%0D%0AMeine aktuelle Situation:%0D%0AWobei ich Hilfe brauche:%0D%0A%0D%0A`}
-        className="bg-white text-black px-6 py-4 rounded-2xl font-bold text-center whitespace-nowrap"
-      >
-        Coaching anfragen
-      </a>
-    </div>
-  </div>
-)}
-        <div className="bg-gray-900 border border-gray-800 rounded-3xl p-6 mb-6">
-          <h2 className="text-2xl font-bold mb-4">Eigene Aufgabe hinzufügen</h2>
-
-          <div className="flex flex-col sm:flex-row gap-3">
-            <input
-              value={newTask}
-              onChange={(e) => setNewTask(e.target.value)}
-              placeholder="Was willst du heute erledigen?"
-              className="flex-1 bg-black border border-gray-700 rounded-xl px-4 py-3"
-            />
-
-            <button
-              onClick={addTask}
-              className="bg-white text-black px-6 py-3 rounded-xl font-bold"
-            >
-              Hinzufügen
-            </button>
-          </div>
-        </div>
-
-        <div className="space-y-4 mb-6">
-          {tasks.length === 0 && (
-            <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 text-center text-gray-400">
-              Noch keine Aufgaben. Füge deine erste Aufgabe hinzu.
-            </div>
-          )}
-
-          {tasks.map((task) => (
-            <div
-              key={task.id}
-              className="w-full bg-gray-900 p-4 rounded-xl flex justify-between items-center gap-4"
-            >
-              <button
-                onClick={() => toggleTask(task)}
-                className="flex-1 flex justify-between text-left"
-              >
-                <span
-                  className={task.completed ? 'line-through text-gray-500' : ''}
-                >
-                  {task.title}
-                </span>
-
-                <span>{task.completed ? '✅' : '⬜'}</span>
-              </button>
-
-              <button
-                onClick={() => deleteTask(task.id)}
-                className="text-gray-500 hover:text-red-400 font-bold"
-              >
-                Löschen
-              </button>
-            </div>
-          ))}
-        </div>
-
-        <button
-          onClick={completeDay}
-          className="w-full bg-white text-black py-4 rounded-2xl font-bold mb-4"
-        >
-          Tag abschließen
-        </button>
-
-        {message && (
-          <div className="bg-gray-900 border border-gray-800 rounded-2xl p-4 text-center text-gray-300 mb-8">
-            {message}
-          </div>
-        )}
-
-        <div className="bg-gray-900 rounded-3xl border border-gray-800 p-6 mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className="text-2xl font-bold">Premium Trainingspläne</h2>
-              <p className="text-gray-500 mt-1">
-                Wähle einen Plan und übernimm ihn direkt in deine Tagesaufgaben.
-              </p>
-            </div>
-
-            {!premium && (
-              <span className="text-sm bg-yellow-500 text-black px-3 py-1 rounded-full font-bold">
-                Premium gesperrt
-              </span>
             )}
-          </div>
 
-          {!premium ? (
-            <div className="text-center py-8">
-              <p className="text-gray-400 mb-6">
-                Trainingspläne sind Teil von RESET Premium.
-              </p>
-
-              <button
-                onClick={startCheckout}
-                className="bg-white text-black px-6 py-3 rounded-2xl font-bold"
-              >
-                Premium freischalten
-              </button>
-            </div>
-          ) : (
-            <>
-              <div className="flex flex-wrap gap-2 mb-5">
-                {[
-                  ['all', 'Alle'],
-                  ['gym', 'Gym'],
-                  ['home', 'Zuhause'],
-                ].map(([value, label]) => (
-                  <button
-                    key={value}
-                    onClick={() => setWorkoutFilter(value)}
-                    className={`px-4 py-2 rounded-xl font-bold ${
-                      workoutFilter === value
-                        ? 'bg-white text-black'
-                        : 'bg-black border border-gray-800 text-gray-400'
-                    }`}
-                  >
-                    {label}
-                  </button>
-                ))}
+            {premium && (
+              <div className="bg-gradient-to-br from-gray-900 to-black border border-gray-800 rounded-3xl p-6">
+                <p className="text-yellow-400 font-bold mb-2">Premium aktiv</p>
+                <h2 className="text-2xl font-bold mb-3">
+                  Dein System ist freigeschaltet 🔥
+                </h2>
+                <p className="text-gray-400">
+                  KI-Coach, Trainingspläne und Coaching-Anfrage sind aktiv.
+                </p>
               </div>
-
-              <div className="grid md:grid-cols-3 gap-4">
-                {filteredWorkoutPlans.map(([key, plan]) => (
-                  <div
-                    key={key}
-                    className="bg-black border border-gray-800 rounded-2xl p-5"
-                  >
-                    <h3 className="text-xl font-bold mb-2">{plan.title}</h3>
-                    <p className="text-gray-400 mb-4">{plan.subtitle}</p>
-
-                    <button
-                      onClick={() => setSelectedWorkoutPlan(plan)}
-                      className="mt-4 w-full bg-white text-black py-3 rounded-xl font-bold"
-                    >
-                      Plan öffnen
-                    </button>
-
-                    <button
-                      onClick={() => addWorkoutTasks(key)}
-                      className="mt-3 w-full bg-gray-900 border border-gray-800 text-white py-3 rounded-xl font-bold"
-                    >
-                      Als Aufgaben übernehmen
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
-
-          {selectedWorkoutPlan && (
-            <div className="mt-6 bg-black border border-gray-800 rounded-2xl p-5">
-              <div className="flex items-center justify-between gap-4 mb-4">
-                <h3 className="text-xl font-bold">{selectedWorkoutPlan.title}</h3>
-
-                <button
-                  onClick={() => setSelectedWorkoutPlan(null)}
-                  className="text-gray-500 hover:text-white font-bold"
-                >
-                  Schließen
-                </button>
-              </div>
-
-              <div className="text-gray-300 whitespace-pre-wrap">
-                {selectedWorkoutPlan.details}
-              </div>
-            </div>
-          )}
-
-          <p className="text-gray-500 text-xs mt-6">
-            Hinweis: Die Trainingspläne ersetzen keine medizinische Beratung. Trainiere nur, wenn du gesund bist.
-          </p>
-        </div>
-
-        <div className="bg-gray-900 rounded-3xl border border-gray-800 p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold">KI Coach</h2>
-
-            {!premium && (
-              <span className="text-sm bg-yellow-500 text-black px-3 py-1 rounded-full font-bold">
-                Premium gesperrt
-              </span>
             )}
-          </div>
 
-          {!premium ? (
-            <div className="text-center py-8">
-              <p className="text-gray-400 mb-3">
-                Der KI-Coach ist Teil von RESET Premium.
-              </p>
+            {premium && (
+              <div className="bg-gray-900 border border-gray-800 rounded-3xl p-6">
+                <p className="text-yellow-400 font-bold mb-2">1:1 Coaching</p>
+                <h2 className="text-2xl font-bold mb-3">
+                  Coaching mit Niklas anfragen
+                </h2>
+                <p className="text-gray-400 mb-5">
+                  Schreib kurz dein Ziel, deine Situation und wobei du Unterstützung brauchst.
+                </p>
 
-              <p className="text-gray-500 mb-6">
-                Er hilft dir bei Motivation, Fokus, Tagesplanung und klaren nächsten Schritten.
-              </p>
+                <a
+                  href={`mailto:niklas.gorbatschow06@gmail.com?subject=1:1 Coaching Anfrage&body=Hi Niklas,%0D%0A%0D%0Aich möchte ein 1:1 Coaching vereinbaren.%0D%0A%0D%0AMein Ziel:%0D%0AMeine aktuelle Situation:%0D%0AWobei ich Hilfe brauche:%0D%0A%0D%0A`}
+                  className="block bg-white text-black px-6 py-3 rounded-2xl font-bold text-center"
+                >
+                  Coaching anfragen
+                </a>
+              </div>
+            )}
 
-              <button
-                onClick={startCheckout}
-                className="bg-white text-black px-6 py-3 rounded-2xl font-bold"
-              >
-                Premium freischalten
-              </button>
-            </div>
-          ) : (
-            <>
-              <div className="grid sm:grid-cols-2 gap-3 mb-4">
-                {[
-                  'Ich habe keine Motivation',
-                  'Ich weiß nicht, womit ich anfangen soll',
-                  'Ich habe heute versagt',
-                  'Gib mir einen 10-Minuten-Plan',
-                ].map((prompt) => (
-                  <button
-                    key={prompt}
-                    onClick={() => setCoachInput(prompt)}
-                    className="bg-black border border-gray-800 rounded-xl px-4 py-3 text-left text-gray-300 hover:text-white hover:border-gray-600"
-                  >
-                    {prompt}
-                  </button>
-                ))}
+            <div className="bg-gray-900 border border-gray-800 rounded-3xl p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-2xl font-bold">KI Coach</h2>
+
+                {!premium && (
+                  <span className="text-sm bg-yellow-500 text-black px-3 py-1 rounded-full font-bold">
+                    Premium
+                  </span>
+                )}
               </div>
 
-              <textarea
-                value={coachInput}
-                onChange={(e) => setCoachInput(e.target.value)}
-                placeholder="Wobei brauchst du gerade Klarheit?"
-                className="w-full bg-black border border-gray-700 rounded-xl p-4 mb-4 min-h-28"
-              />
+              {!premium ? (
+                <div className="text-center py-6">
+                  <p className="text-gray-400 mb-5">
+                    Der KI-Coach ist Teil von RESET Premium.
+                  </p>
 
-              <button
-                onClick={askCoach}
-                disabled={coachLoading}
-                className="w-full bg-white text-black py-4 rounded-2xl font-bold disabled:opacity-50"
-              >
-                {coachLoading ? 'Coach denkt...' : 'Coach fragen'}
-              </button>
-
-              {coachReply && (
-                <div className="mt-4 bg-black border border-gray-800 rounded-xl p-4 text-gray-300 whitespace-pre-wrap">
-                  {coachReply}
+                  <button
+                    onClick={startCheckout}
+                    className="bg-white text-black px-6 py-3 rounded-2xl font-bold"
+                  >
+                    Premium freischalten
+                  </button>
                 </div>
+              ) : (
+                <>
+                  <div className="grid gap-3 mb-4">
+                    {[
+                      'Ich habe keine Motivation',
+                      'Ich weiß nicht, womit ich anfangen soll',
+                      'Ich habe heute versagt',
+                      'Gib mir einen 10-Minuten-Plan',
+                    ].map((prompt) => (
+                      <button
+                        key={prompt}
+                        onClick={() => setCoachInput(prompt)}
+                        className="bg-black border border-gray-800 rounded-xl px-4 py-3 text-left text-gray-300 hover:text-white hover:border-gray-600"
+                      >
+                        {prompt}
+                      </button>
+                    ))}
+                  </div>
+
+                  <textarea
+                    value={coachInput}
+                    onChange={(e) => setCoachInput(e.target.value)}
+                    placeholder="Wobei brauchst du gerade Klarheit?"
+                    className="w-full bg-black border border-gray-700 rounded-xl p-4 mb-4 min-h-28"
+                  />
+
+                  <button
+                    onClick={askCoach}
+                    disabled={coachLoading}
+                    className="w-full bg-white text-black py-4 rounded-2xl font-bold disabled:opacity-50"
+                  >
+                    {coachLoading ? 'Coach denkt...' : 'Coach fragen'}
+                  </button>
+
+                  {coachReply && (
+                    <div className="mt-4 bg-black border border-gray-800 rounded-xl p-4 text-gray-300 whitespace-pre-wrap">
+                      {coachReply}
+                    </div>
+                  )}
+                </>
               )}
-            </>
-          )}
+            </div>
+          </aside>
         </div>
       </div>
     </main>
