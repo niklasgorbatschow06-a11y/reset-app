@@ -217,7 +217,7 @@ export default function Home() {
             Kein kompliziertes System.
           </h2>
           <p className="text-gray-400 max-w-2xl mx-auto text-lg">
-            RESET ist für Menschen, die Struktur, Fokus und Momentum aufbauen wollen â€”
+            RESET ist für Menschen, die Struktur, Fokus und Momentum aufbauen wollen,
             ohne überladene Produktivität-App.
           </p>
         </section>
