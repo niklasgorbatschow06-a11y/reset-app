@@ -1,3 +1,9 @@
-module.exports = {
-  allowedDevOrigins: ['192.168.0.55'],
-}
+const withPWA = require('next-pwa')({
+  dest: 'public',
+  register: true,
+  skipWaiting: true,
+})
+
+module.exports = withPWA({
+  reactStrictMode: true,
+})
